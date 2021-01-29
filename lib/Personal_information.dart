@@ -6,6 +6,14 @@ class personaluser extends StatefulWidget {
 }
 
 class _personaluserState extends State<personaluser> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,6 +22,7 @@ class _personaluserState extends State<personaluser> {
       ),
       body: Container(
         color: Colors.yellowAccent,
+        child: Image.network('https://miro.medium.com/max/500/1*in7MRIAKfRn-qDgJKc9XVw.jpeg'),
       ),
     );
   }
