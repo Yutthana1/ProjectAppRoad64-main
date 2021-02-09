@@ -25,7 +25,7 @@ class _reportroadState extends State<reportroad> {
     // TODO: implement initState
     super.initState();
 
-    findLatLng();
+    findLatLng();//หาตำแหน่งก่อนค่อย get location
   }
 
   //thread ไว้ค้นหาตำแหน่งเวลาเปิดแอฟขึ้นมาอัตโนมัติ
