@@ -1,3 +1,4 @@
+import 'package:approad_project64/Register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +30,8 @@ class _loginState extends State<login> {
             passWordTextField('Password', 'รหัสผ่าน'),
             SizedBox(height: 25),
             loginButton(), //ปุ่ม login
+            SizedBox(height: 20),
+            registerTextField('สมัครสมาชิก'),
           ],
         ),
         color: Colors.white,
@@ -85,6 +88,26 @@ class _loginState extends State<login> {
     );
   }
 
+  Widget registerTextField(String text) {
+    return Container(
+      //width: MediaQuery.of(context).size.width * 0.5,
+      child: GestureDetector(
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 16, color: Colors.indigoAccent),
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            new MaterialPageRoute(
+              builder: (context) => register(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget userTextField(String txtLabel, String hintTxt) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -107,10 +130,7 @@ class _loginState extends State<login> {
     );
   }
 
-  Widget passWordTextField(
-    String txtLabel,
-    String hintTxt,
-  ) {
+  Widget passWordTextField(String txtLabel, String hintTxt) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextField(
