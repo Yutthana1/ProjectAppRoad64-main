@@ -20,21 +20,23 @@ class _loginState extends State<login> {
       appBar: AppBar(
         title: Text('Login page'),
       ),
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 16),
-            userTextField('Username', 'ชื่อผู้ใช้งาน'),
-            SizedBox(height: 16),
-            passWordTextField('Password', 'รหัสผ่าน'),
-            SizedBox(height: 25),
-            loginButton(), //ปุ่ม login
-            SizedBox(height: 20),
-            registerTextField('สมัครสมาชิก'),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 16),
+              userTextField('Username', 'ชื่อผู้ใช้งาน'),
+              SizedBox(height: 16),
+              passWordTextField('Password', 'รหัสผ่าน'),
+              SizedBox(height: 25),
+              loginButton(), //ปุ่ม login
+              SizedBox(height: 20),
+              registerTextField('สมัครสมาชิก'),
+            ],
+          ),
+          color: Colors.white,
         ),
-        color: Colors.white,
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -15,9 +16,17 @@ class reportroad extends StatefulWidget {
 }
 
 class _reportroadState extends State<reportroad> {
+  String _dropdownValue;
+
+  List _listValue = ['หลุม', 'ซ่อมปะ', 'แตกร้าว', 'ปกติ'];
+
+  DateTime _dateTimeSelect = DateTime.now();
+  TextEditingController _controllerDetails =
+  TextEditingController(); //prepaer value รายละเอียด
   //Fill
   File img;
   double lat, lng;
+
   //LatLng latLng = LatLng(16.1995994, 103.2804355); กำหนดตำแหน่ง แบบ fix เอา
 
   @override
@@ -25,7 +34,7 @@ class _reportroadState extends State<reportroad> {
     // TODO: implement initState
     super.initState();
 
-    findLatLng();//หาตำแหน่งก่อนค่อย get location
+    findLatLng(); //หาตำแหน่งก่อนค่อย get location
   }
 
   //thread ไว้ค้นหาตำแหน่งเวลาเปิดแอฟขึ้นมาอัตโนมัติ
@@ -60,39 +69,22 @@ class _reportroadState extends State<reportroad> {
             Column(
               children: [
                 (lat == null) ? showProgress() : showMap(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                  child: Container(
-                    child: (img == null)
-                        ? Image.asset(
-                            'images/gallery.png',
-                            height: 250,
-                          )
-                        : Image.file(img),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                        icon: Icon(
-                          Icons.camera,
-                          size: 35,
-                        ),
-                        onPressed: () {
-                          chooseImge(ImageSource.camera);
-                        }),
-                    IconButton(
-                        icon: Icon(
-                          Icons.photo_rounded,
-                          size: 35,
-                        ),
-                        onPressed: () {
-                          chooseImge(ImageSource.gallery);
-                        }),
-                  ],
-                ),
-                SaveReport(),
+                showImageCamera(),
+                (img == null)
+                    ? Text(
+                  '*กรูณาถ่ายภาพ หรือ เลือกรูปภาพ*',
+                  style: TextStyle(fontSize: 16, color: Colors.red),
+                )
+                    : Container(),
+                showIconImgCameraGallary(),
+                SizedBox(height: 12.0),
+                (img == null) ? Container() : showDatepicker(context),
+                (img == null) ? Container() : showLatLngText(),
+                (img == null) ? Container() : buildDropdownButton(),
+                (img == null)
+                    ? Container()
+                    : detailsTextField('Details', 'รายละเอียดเพิ่มเติม'),
+                (img == null) ? Container() : SaveReport(),
               ],
             ),
           ],
@@ -103,19 +95,130 @@ class _reportroadState extends State<reportroad> {
     );
   }
 
-  Widget SaveReport() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: RaisedButton.icon(
-        color: HexColor('#3C61F0'),
-        onPressed: () {},
-        icon: Icon(
-          Icons.save,
-          color: Colors.white,
+  //Drowdown ประเถทหลุม
+  Widget buildDropdownButton() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('เลือกประเภทของหลุม*',style: TextStyle(color: Colors.red),),
+          SizedBox(width: 10,),
+          DropdownButton(
+            hint: Text('เลือกประเภทหลุม',style: TextStyle(color: Colors.red),),
+                      value: _dropdownValue,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _dropdownValue = newValue;
+                        });
+                      }, items: _listValue.map((valueItem) {
+                      return DropdownMenuItem(
+                          value: valueItem, child: Text(valueItem));
+                    }).toList()),
+        ],
+      ),
+    );
+  }
+
+  Widget showLatLngText() {
+    return Column(
+      children: [
+        Text('ละติจูดที่=$lat, ลองติจูด=$lng'),
+      ],
+    );
+  }
+
+  Widget showDatepicker(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          "วันที่",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        label: Text(
-          'บันทึกข้อมูล',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+        SizedBox(width: 10.0),
+        Text(
+          "${_dateTimeSelect}".split(' ')[0],
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(width: 10.0),
+        Container(
+          child: GestureDetector(
+            child: Icon(Icons.calendar_today),
+            onTap: () => _slectDate(context),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget showIconImgCameraGallary() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+            icon: Icon(
+              Icons.camera,
+              size: 35,
+            ),
+            onPressed: () {
+              chooseImge(ImageSource.camera);
+            }),
+        IconButton(
+            icon: Icon(
+              Icons.photo_rounded,
+              size: 35,
+            ),
+            onPressed: () {
+              chooseImge(ImageSource.gallery);
+            }),
+      ],
+    );
+  }
+
+  Widget showImageCamera() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+      child: Container(
+        child: (img == null)
+            ? Image.asset(
+          'images/gallery.png',
+          height: 250,
+        )
+            : Image.file(img),
+      ),
+    );
+  }
+
+  Widget SaveReport() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * .6,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height * .06,
+        child: RaisedButton.icon(
+          elevation: 15.0,
+          shape: StadiumBorder(),
+          color: HexColor('#3b38ea'),
+          onPressed: () {
+            print(' date time now : ${_dateTimeSelect}');
+            print('Drop down vlue =$_dropdownValue');
+            _uploadToserver();
+          },
+          icon: Icon(
+            Icons.save,
+            color: Colors.white,
+          ),
+          label: Text(
+            'บันทึกข้อมูล',
+            style: TextStyle(fontSize: 20, color: Colors.white),
+          ),
         ),
       ),
     );
@@ -130,7 +233,7 @@ class _reportroadState extends State<reportroad> {
         infoWindow: InfoWindow(
           title: 'ตำแหน่งของคุณ',
           snippet: 'ละติจูด: $lat, ลองติจูด: $lng',
-          onTap: ()=> openOnGoogleMapApp(lat,lng),
+          onTap: () => openOnGoogleMapApp(lat, lng),
         ),
       ),
     ].toSet(); //สร้างเป็นอาเรย์ที่เป็น set
@@ -172,7 +275,7 @@ class _reportroadState extends State<reportroad> {
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
     } else {
-      throw 'Cannot Open Google Mapl $googleUrl';// Could not open the map.
+      throw 'Cannot Open Google Mapl $googleUrl'; // Could not open the map.
     }
   }
 
@@ -182,4 +285,70 @@ class _reportroadState extends State<reportroad> {
       child: CircularProgressIndicator(),
     );
   }
+
+//ระบุรายละเอียดของข้อมูล
+  Widget detailsTextField(String txtLabel, String hintTxt) {
+    return Container(
+      width: MediaQuery
+          .of(context)
+          .size
+          .width * .8,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          maxLines: 2,
+          controller: _controllerDetails, //ผูก ยูเซอร์
+          //keyboardType: TextInputType.name,
+          decoration: InputDecoration(
+            helperText: '-อธิบายเกี่ยวกับหลุม',
+            suffixIcon: Icon(Icons.details),
+            hintText: hintTxt,
+            labelText: txtLabel,
+            labelStyle: TextStyle(
+              fontSize: 18,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+//เลือก date time จาก datepicker
+  _slectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _dateTimeSelect,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2025),
+      initialEntryMode: DatePickerEntryMode.input, //มีช่องให้กรอกวันที่
+    );
+    if (picked != null && picked != _dateTimeSelect) {
+      //เมื่อเวลาไม่เท่า null ก็ให้เอาไปใส่ในตัวแปล gobal + setstate
+      setState(() {
+        _dateTimeSelect = picked;
+      });
+    }
+  }
+
+
+
+  _uploadToserver () {
+    if(img!=null){
+      //String b64 = base64Encode(img.readAsBytesSync());
+      //print('b64=$b64');
+
+      var data ={};
+      data['datatime']=_dateTimeSelect.toString();
+      data['dropdown'] = _dropdownValue.toString();
+      data['lng']=lng;
+      data['lat']=lat;
+      data['detail'] = _controllerDetails.text;
+      data['img64'] = base64Encode(img.readAsBytesSync()).toString();
+      print(data);
+      var encodeJS = jsonEncode(data);
+      print(encodeJS);
+      }
+    }
+
 }
+

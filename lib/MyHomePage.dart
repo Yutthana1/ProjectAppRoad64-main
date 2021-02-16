@@ -164,9 +164,7 @@ class _HomePageState extends State<HomePage> {
             accountEmail: Text('test01@gmail.com'),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
-
-              backgroundImage: NetworkImage(
-                  'https://png2.cleanpng.com/sh/b518720bb1dbc76b082144ad2ffcd67a/L0KzQYq3V8A1N6J2gJH0aYP2gLBuTfxwb5CyiNH7dHHlfLa0jvV1f5D3g59wcnHzeLrqk71kdJp1RdN7dD3sfbLuhb11epJzRed8ZYKwfLFuj710bZJ3e9o2cnX2hb37Tcgua51uiNN7dIOwdrF5TgV0baMyhNHwLUXnQbaBgsg5PpJpTaU7LkC5RIGAVsU3OWY7SqQDMki7SIW6V8YveJ9s/kisspng-logo-portable-network-graphics-clip-art-image-tran-user-logo-search-result-8-cliparts-for-user-log-5d1e8b886ad532.0640765615622828884376.png'),
+              child: Icon(Icons.account_circle,size: 70,),
             ),
           ),
 
