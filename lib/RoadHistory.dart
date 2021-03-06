@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:approad_project64/models/ReportRecordModel.dart';
 import 'package:approad_project64/models/RoadHisrtoryModels.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,8 +11,8 @@ class roadhistory extends StatefulWidget {
 }
 
 class _roadhistoryState extends State<roadhistory> {
-
-  List<RoadhistoryModel> RoadHistoryList=[];
+  List<reportRecordModel> reportRecordList = []; //ทำถึงนี้นะ
+  //List<RoadhistoryModel> RoadHistoryList=[];
   @override
   void initState() {
     // TODO: implement initState
@@ -19,19 +20,21 @@ class _roadhistoryState extends State<roadhistory> {
     LoadRoadhistory();
   }
 
+  String endPoint = 'http://203.154.83.62:1238/select/road';
+
   LoadRoadhistory() async {
-    final response = await http.get('http://203.154.83.62:1238/del/kuy/small');
+    /*var str = {'user_id':4};
+    var jsonEnCodedata = jsonEncode(str);*/
+    final response =
+        await http.post(endPoint, body: jsonEncode({'user_id': 4}));
     if (response.statusCode == 200) {
-      //print(response.statusCode);
+      //print(response.body);
       final jsonDecoDE = jsonDecode(response.body);
-      // print(jsonDecoDE);
+      //print(jsonDecoDE);
       setState(() {
         jsonDecoDE.forEach((data) {
-          final dataOBJ = RoadhistoryModel.fromJson(data);
-          if (dataOBJ.uId != '') {
-            RoadHistoryList.add(dataOBJ);
-          }
-          //print(data);
+          final dataOBJ = reportRecordModel.fromJson(data);
+          reportRecordList.add(dataOBJ);
         });
       });
     }
@@ -44,13 +47,13 @@ class _roadhistoryState extends State<roadhistory> {
         title: Text('ประวัติแจ้งถนนชำรุด'),
       ),
       body: ListView.builder(
-        itemCount: RoadHistoryList.length,
+        itemCount: reportRecordList.length,
         itemBuilder: (context, index) {
           return ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('${RoadHistoryList[index].name}'),
-            trailing: Text('${RoadHistoryList[index].nameId}'),
-            subtitle: Text('${RoadHistoryList[index].username}'),
+          //  leading: Image.network('${reportRecordList[index].photo}'),
+            title: Text('${reportRecordList[index].crackType}'),
+            trailing: Text('${reportRecordList[index].date}'),
+            subtitle: Text('${reportRecordList[index].detail}'),
           );
         },
       ),

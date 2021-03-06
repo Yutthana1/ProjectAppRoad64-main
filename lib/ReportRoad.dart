@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -16,13 +17,14 @@ class reportroad extends StatefulWidget {
 }
 
 class _reportroadState extends State<reportroad> {
+  int _valueInt;
   String _dropdownValue;
-
-  List _listValue = ['หลุม', 'ซ่อมปะ', 'แตกร้าว', 'ปกติ'];
+  List _listValue = [0,1,2,3];
+  List _listItem = ['หลุม', 'ซ่อมปะ', 'แตกร้าว', 'ปกติ'];
 
   DateTime _dateTimeSelect = DateTime.now();
   TextEditingController _controllerDetails =
-  TextEditingController(); //prepaer value รายละเอียด
+      TextEditingController(); //prepaer value รายละเอียด
   //Fill
   File img;
   double lat, lng;
@@ -72,13 +74,13 @@ class _reportroadState extends State<reportroad> {
                 showImageCamera(),
                 (img == null)
                     ? Text(
-                  '*กรูณาถ่ายภาพ หรือ เลือกรูปภาพ*',
-                  style: TextStyle(fontSize: 16, color: Colors.red),
-                )
+                        '*กรูณาถ่ายภาพ หรือ เลือกรูปภาพ*',
+                        style: TextStyle(fontSize: 16, color: Colors.red),
+                      )
                     : Container(),
                 showIconImgCameraGallary(),
                 SizedBox(height: 12.0),
-                (img == null) ? Container() : showDatepicker(context),
+                //(img == null) ? Container() : showDatepicker(context),
                 (img == null) ? Container() : showLatLngText(),
                 (img == null) ? Container() : buildDropdownButton(),
                 (img == null)
@@ -102,19 +104,28 @@ class _reportroadState extends State<reportroad> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('เลือกประเภทของหลุม*',style: TextStyle(color: Colors.red),),
-          SizedBox(width: 10,),
+          Text(
+            'เลือกประเภทของหลุม*',
+            style: TextStyle(color: Colors.red),
+          ),
+          SizedBox(
+            width: 10,
+          ),
           DropdownButton(
-            hint: Text('เลือกประเภทหลุม',style: TextStyle(color: Colors.red),),
-                      value: _dropdownValue,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _dropdownValue = newValue;
-                        });
-                      }, items: _listValue.map((valueItem) {
-                      return DropdownMenuItem(
-                          value: valueItem, child: Text(valueItem));
-                    }).toList()),
+              hint: Text(
+                'ประเภท',
+                style: TextStyle(color: Colors.red),
+              ),
+              value: _valueInt,
+              onChanged: (newValue) {
+                setState(() {
+                  _valueInt = newValue;
+                });
+              },
+              items: _listValue.map((valueItem) {
+                return DropdownMenuItem(
+                    value: valueItem, child: Text(valueItem.toString()));
+              }).toList()),
         ],
       ),
     );
@@ -182,9 +193,9 @@ class _reportroadState extends State<reportroad> {
       child: Container(
         child: (img == null)
             ? Image.asset(
-          'images/gallery.png',
-          height: 250,
-        )
+                'images/gallery.png',
+                height: 250,
+              )
             : Image.file(img),
       ),
     );
@@ -194,22 +205,18 @@ class _reportroadState extends State<reportroad> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * .6,
-        height: MediaQuery
-            .of(context)
-            .size
-            .height * .06,
+        width: MediaQuery.of(context).size.width * .6,
+        height: MediaQuery.of(context).size.height * .06,
         child: RaisedButton.icon(
           elevation: 15.0,
           shape: StadiumBorder(),
           color: HexColor('#3b38ea'),
           onPressed: () {
-            print(' date time now : ${_dateTimeSelect}');
-            print('Drop down vlue =$_dropdownValue');
-            _uploadToserver();
+            _upload(img);
+            //print('valuint=$_valueInt');
+            //print(' date time now : ${_dateTimeSelect}');
+            //print('Drop down vlue =$_dropdownValue');
+           // _uploadToserver();
           },
           icon: Icon(
             Icons.save,
@@ -289,10 +296,7 @@ class _reportroadState extends State<reportroad> {
 //ระบุรายละเอียดของข้อมูล
   Widget detailsTextField(String txtLabel, String hintTxt) {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width * .8,
+      width: MediaQuery.of(context).size.width * .8,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextField(
@@ -330,25 +334,55 @@ class _reportroadState extends State<reportroad> {
     }
   }
 
-
-
-  _uploadToserver () {
-    if(img!=null){
+  _uploadToserver() {
+    if (img != null) {
       //String b64 = base64Encode(img.readAsBytesSync());
       //print('b64=$b64');
 
-      var data ={};
+      /*var data ={};
       data['datatime']=_dateTimeSelect.toString();
       data['dropdown'] = _dropdownValue.toString();
-      data['lng']=lng;
-      data['lat']=lat;
+      data['lng']=lng.toString();
+      data['lat']=lat.toString();
       data['detail'] = _controllerDetails.text;
       data['img64'] = base64Encode(img.readAsBytesSync()).toString();
       print(data);
       var encodeJS = jsonEncode(data);
-      print(encodeJS);
-      }
+      print(encodeJS);*/
+
+      //-----------------------------------------------------------------------------
+
     }
+  }
+    final String endPoint = "http://203.154.83.62:1238/user/upload_file";
+   _upload(File file) async {
+    if (img != null) {
+      String fileName = file.path.split('/').last;
+      FormData data = FormData.fromMap({
+        "file": await MultipartFile.fromFile(
+          file.path,
+          filename: fileName,
+        ),
+        "userid": '6',
+        //'dateTime':_dateTimeSelect,
+        'gps_latitude':lat,
+        'gps_longitude':lng,
+        'crack_type':_valueInt,
+        'detail':_controllerDetails.text
 
+      });
+      //print(fileName);
+      print(data.fields);
+      Dio dio = new Dio();
+      dio.post(endPoint, data: data).then((response) {
+        var jsonResponse = jsonDecode(response.data);
+        print('jsonResponse= $jsonResponse');
+        print(response.statusCode);
+        print(response.data);
+
+        /*var testData = jsonResponse['histogram_counts'].cast<double>();
+        var averageGrindSize = jsonResponse['average_particle_size'];*/
+      }).catchError((error) => print(error));
+    }
+  }
 }
-
