@@ -1,3 +1,4 @@
+import 'package:approad_project64/Login.dart';
 import 'package:flutter/material.dart';
 
 import 'MyHomePage.dart';
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomePage(),
+      home: login(),
       title: 'แอปรายงานถนนชำรุด',
     );
   }

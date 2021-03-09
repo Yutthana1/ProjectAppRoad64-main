@@ -222,8 +222,8 @@ class _registerState extends State<register> {
   var endPoint = 'http://203.154.83.62:1238/user/register';
   Future sentData()async{
     var dataRegsiter ={};
-    dataRegsiter['username']=_userController.text;
-    dataRegsiter['password']=_passwordController.text;
+    dataRegsiter['username']=_userController.text.trim();//ตัดช่องว่างหน้าหลังง
+    dataRegsiter['password']=_passwordController.text.trim();
     //print(dataRegsiter);
     var jsonDataSent = jsonEncode(dataRegsiter);
     print('datasent=$jsonDataSent');

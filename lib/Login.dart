@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:approad_project64/Register.dart';
+import 'package:approad_project64/main_User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class login extends StatefulWidget {
   @override
@@ -13,6 +18,24 @@ class _loginState extends State<login> {
   bool _secureText = true;
   TextEditingController _userController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    autoLogIn();
+  }
+  Future<Null> autoLogIn() async {
+    try{
+       SharedPreferences prefs = await SharedPreferences.getInstance();
+       String userId = prefs.getString('userId');
+      if (userId != null && userId.isNotEmpty) {
+        MaterialPageRoute route = MaterialPageRoute(builder: (context) => main_user_page(),);
+        Navigator.pushAndRemoveUntil(context, route, (route) => false);
+      }
+    }catch(e){print(e);}
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +88,9 @@ class _loginState extends State<login> {
                     _passwordController.text != '') {
                   _errorUser = null;
                   _errorpPassword = null;
-                  print('_userController=' + _userController.text);
-                  print('_passwordController=' + _passwordController.text);
+                  //print('_userController=' + _userController.text);
+                  //print('_passwordController=' + _passwordController.text);
+                  checkAuthen(); // เมทอด เช็คล็อกอิน
                 } else if (_userController.text == '' &&
                     _passwordController.text != '') {
                   _errorUser = 'โปรดใส่ข้อมูลUser';
@@ -88,6 +112,62 @@ class _loginState extends State<login> {
         ],
       ),
     );
+  }
+
+  Future<Null> checkAuthen() async {
+    String endPoint = 'http://203.154.83.62:1238/user/login';
+    var data = jsonEncode({
+      'username': _userController.text,
+      'password': _passwordController.text
+    });
+    try {
+      var response = await http.post(endPoint, body: data);
+      var resJsDe = json.decode(response.body);
+
+      if (response.statusCode == 200) {
+        if (resJsDe[0]['token'] != null) {
+          var tokenSplit1 = resJsDe[0]['token'].toString().split('.');
+          if (tokenSplit1.length == 3) {
+            //เช็ค token ว่ามี 3 ส่วนไหม
+            var payload = tokenSplit1[1]; //token payload
+            var nomalizePayload = base64Url.normalize(payload);
+            var resp = utf8.decode(base64Url.decode(nomalizePayload)); //ทำให้อยู่ในรูปแบบที่อ่านได้ utf-8
+            var jsonPayload = json.decode(resp);
+            // print(jsonPayload);
+            //print(jsonPayload['user_id']);
+            String id = jsonPayload['user_id'];
+            String token = resJsDe[0]['token'];
+
+            //if (type =='user'){
+            routeToService(main_user_page(), token, id);
+            // }else if(type =='admin'){ }
+
+          } else {
+            print('Invalid Token leng==3!!!');
+          }
+        } else {
+          print('ไม่มี token มาด้วย!!');
+        }
+      } else {
+        print('ไม่พบข้อมูล user!!');
+      }
+    } catch (e) {
+      print('Error !! $e');
+    }
+  }
+
+// สร้างหน้าที่จะไปแบบ แยก user กับ admin โดยใส่ rout เส้นทางที่จะไป (mypage = หน้าที่จะไป)
+  Future<Null> routeToService(Widget mypage, String token, String id) async {
+    SharedPreferences preferences =
+        await SharedPreferences.getInstance(); //auto login get instant local
+    preferences.setString('Token', token); //ฝังลงนนแอป
+    preferences.setString('userId', id);//ฝังลงนนแอป
+
+    MaterialPageRoute route = MaterialPageRoute(
+      builder: (context) => mypage,
+    );
+    //Navigator.push(context, route); //ไปหน้าใหม่แบบ push ลง stack ซ้อนทับกันไปเรื่อยๆ
+      Navigator.pushAndRemoveUntil(context, route, (route) => false);//ไปหน้าใหม่ โดย ลบหน้าเก่าที่อยู่บน stack ออกให้หมด
   }
 
   Widget registerTextField(String text) {

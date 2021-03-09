@@ -50,10 +50,18 @@ class _roadhistoryState extends State<roadhistory> {
         itemCount: reportRecordList.length,
         itemBuilder: (context, index) {
           return ListTile(
-          //  leading: Image.network('${reportRecordList[index].photo}'),
-            title: Text('${reportRecordList[index].crackType}'),
-            trailing: Text('${reportRecordList[index].date}'),
-            subtitle: Text('${reportRecordList[index].detail}'),
+            leading: Container(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: Image.network(
+                    'http://203.154.83.62:1238/photo/${reportRecordList[index].userIdFk}/${reportRecordList[index].photo}')),
+            title: Text(
+              '${reportRecordList[index].crackType}',
+              style: TextStyle(fontSize: 22),
+            ),
+            trailing: Text('${reportRecordList[index].roadId}'),
+            subtitle: Text(
+                '${reportRecordList[index].detail} \n${reportRecordList[index].date.substring(4, 25)}'),
+            isThreeLine: true,
           );
         },
       ),
