@@ -2,9 +2,12 @@ import 'dart:ui';
 
 import 'package:approad_project64/Login.dart';
 import 'package:approad_project64/Register.dart';
+import 'package:approad_project64/utility/signout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Personal_information.dart';
 import 'ReportRoad.dart';
@@ -17,6 +20,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String _user_id, _Token;
+  bool _isLoggedIn;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getUser();
+  }
+
+  Future<Null> _getUser() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _user_id = preferences.getString('userId');
+      _Token = preferences.getString('Token');
+      _isLoggedIn = preferences.getBool('isLoggedIn');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,47 +180,37 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           UserAccountsDrawerHeader(
             accountName: Text(
-              'Test Test11',
+              'สวัสดี คุณ $_user_id Login=$_isLoggedIn',
               style: TextStyle(fontSize: 20),
             ),
-            accountEmail: Text('test01@gmail.com'),
+            accountEmail: Text('Token:$_Token'),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
-              child: Icon(Icons.account_circle,size: 70,),
-            ),
-          ),
-
-          /* DrawerHeader(
-            decoration: BoxDecoration(color: Colors.blue),
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 40,
-                  ),
-                  Text(
-                    'Hello Maki losuss',
-                  ),
-                ],
+              child: Icon(
+                Icons.account_circle,
+                size: 70,
               ),
             ),
-          ),*/
-
-          ListTile(
-            leading: Icon(Icons.login_sharp),
-            title: Text('Login'),
-            onTap: () => {
-              Navigator.push(
-                context,
-                new MaterialPageRoute(
-                  builder: (context) => new login(),
-                ),
-              ).then((value) => null),
-            },
           ),
-          ListTile(
+          (_isLoggedIn != true)
+              ? ListTile(
+                  leading: Icon(Icons.login_sharp),
+                  title: Text('Login'),
+                  onTap: () => {
+                    Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (context) => new login(),
+                      ),
+                    ).then((value) => null),
+                  },
+                )
+              : ListTile(
+                  title: Text('Logout'),
+                  leading: Icon(Icons.logout),
+                  onTap: () => logOut(context),
+                ),
+          /*ListTile(
             title: Text('Register'),
             leading: Icon(Icons.person_add_alt_1_sharp),
             onTap: () => {
@@ -209,12 +221,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ).then((value) => null),
             },
-          ),
-          ListTile(
-            title: Text('Logout'),
-            leading: Icon(Icons.logout),
-            onTap: () => {},
-          ),
+          ),*/
           ListTile(
             title: Text('Close'),
             leading: Icon(Icons.close),

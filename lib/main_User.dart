@@ -12,30 +12,21 @@ class _main_user_pageState extends State<main_user_page> {
   String user_id;
   String Token;
 
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUser();
+    _getUser();
   }
 
-  Future<Null> getUser() async {
+  Future<Null> _getUser() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       user_id = preferences.getString('userId');
       Token = preferences.getString('Token');
     });
   }
-
- /* Future<Null> logOut() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.clear();//clear local stored
-
-    MaterialPageRoute route = MaterialPageRoute(
-      builder: (context) => login(),
-    );
-    Navigator.pushAndRemoveUntil(context, route, (route) => false);
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +35,7 @@ class _main_user_pageState extends State<main_user_page> {
         title:
             Text(user_id == null ? 'main_user' : '$user_id Login successfully'),
         actions: [
-          IconButton(icon: Icon(Icons.logout), onPressed: () => logOut(context))
+          IconButton(icon: Icon(Icons.logout), onPressed: () => logOut(context),),
         ],
       ),
       body: Container(

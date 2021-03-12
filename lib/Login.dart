@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:approad_project64/MyHomePage.dart';
 import 'package:approad_project64/Register.dart';
 import 'package:approad_project64/main_User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+//import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class login extends StatefulWidget {
@@ -18,7 +20,7 @@ class _loginState extends State<login> {
   bool _secureText = true;
   TextEditingController _userController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-
+  String userId;
   @override
   void initState() {
     // TODO: implement initState
@@ -28,13 +30,12 @@ class _loginState extends State<login> {
   Future<Null> autoLogIn() async {
     try{
        SharedPreferences prefs = await SharedPreferences.getInstance();
-       String userId = prefs.getString('userId');
-      if (userId != null && userId.isNotEmpty) {
-        MaterialPageRoute route = MaterialPageRoute(builder: (context) => main_user_page(),);
+        userId = prefs.getString('userId');
+      if (userId != null ) {
+        MaterialPageRoute route = MaterialPageRoute(builder: (context) => HomePage(),);
         Navigator.pushAndRemoveUntil(context, route, (route) => false);
       }
     }catch(e){print(e);}
-
   }
 
   @override
@@ -56,6 +57,7 @@ class _loginState extends State<login> {
               loginButton(), //ปุ่ม login
               SizedBox(height: 20),
               registerTextField('สมัครสมาชิก'),
+              Text('userId= $userId'),
             ],
           ),
           color: Colors.white,
@@ -139,11 +141,11 @@ class _loginState extends State<login> {
             String token = resJsDe[0]['token'];
 
             //if (type =='user'){
-            routeToService(main_user_page(), token, id);
+            routeToService(HomePage(), token, id);
             // }else if(type =='admin'){ }
 
           } else {
-            print('Invalid Token leng==3!!!');
+            print('Invalid Token length==3!!!');
           }
         } else {
           print('ไม่มี token มาด้วย!!');
@@ -158,10 +160,11 @@ class _loginState extends State<login> {
 
 // สร้างหน้าที่จะไปแบบ แยก user กับ admin โดยใส่ rout เส้นทางที่จะไป (mypage = หน้าที่จะไป)
   Future<Null> routeToService(Widget mypage, String token, String id) async {
-    SharedPreferences preferences =
-        await SharedPreferences.getInstance(); //auto login get instant local
+    SharedPreferences preferences = await SharedPreferences.getInstance(); //auto login get instant local
     preferences.setString('Token', token); //ฝังลงนนแอป
     preferences.setString('userId', id);//ฝังลงนนแอป
+    preferences.setBool('isLoggedIn', true);//ฝังลงนนแอป
+
 
     MaterialPageRoute route = MaterialPageRoute(
       builder: (context) => mypage,

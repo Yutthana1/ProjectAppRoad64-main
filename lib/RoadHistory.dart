@@ -4,6 +4,7 @@ import 'package:approad_project64/models/ReportRecordModel.dart';
 import 'package:approad_project64/models/RoadHisrtoryModels.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class roadhistory extends StatefulWidget {
   @override
@@ -23,10 +24,10 @@ class _roadhistoryState extends State<roadhistory> {
   String endPoint = 'http://203.154.83.62:1238/select/road';
 
   LoadRoadhistory() async {
-    /*var str = {'user_id':4};
-    var jsonEnCodedata = jsonEncode(str);*/
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('userId');
     final response =
-        await http.post(endPoint, body: jsonEncode({'user_id': 4}));
+        await http.post(endPoint, body: jsonEncode({'user_id': userId}));
     if (response.statusCode == 200) {
       //print(response.body);
       final jsonDecoDE = jsonDecode(response.body);

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:approad_project64/MyHomePage.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class reportroad extends StatefulWidget {
@@ -213,6 +215,8 @@ class _reportroadState extends State<reportroad> {
           color: HexColor('#3b38ea'),
           onPressed: () {
             _upload(img);
+            MaterialPageRoute route =MaterialPageRoute(builder: (context) => HomePage(),);
+            Navigator.pushAndRemoveUntil(context, route, (route) => false);
             //print('valuint=$_valueInt');
             //print(' date time now : ${_dateTimeSelect}');
             //print('Drop down vlue =$_dropdownValue');
@@ -357,13 +361,16 @@ class _reportroadState extends State<reportroad> {
     final String endPoint = "http://203.154.83.62:1238/user/upload_file";
    _upload(File file) async {
     if (img != null) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String userId =  preferences.getString('userId');
+
       String fileName = file.path.split('/').last;
       FormData data = FormData.fromMap({
         "file": await MultipartFile.fromFile(
           file.path,
           filename: fileName,
         ),
-        "userid": '6',
+        "userid": userId,
         //'dateTime':_dateTimeSelect,
         'gps_latitude':lat,
         'gps_longitude':lng,
