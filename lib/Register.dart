@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:approad_project64/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:hexcolor/hexcolor.dart';
@@ -177,13 +178,15 @@ class _registerState extends State<register> {
                   print('_userController=' + _userController.text);
                   //print('_passwordController=' + _passwordController.text);
                   //print('_errorpPasswordAgian=' + _passwordAgianController.text);
-                  if(_passwordController.text == _passwordAgianController.text){
-                   /* print('_passwordController=' + _passwordController.text);
+                  if (_passwordController.text ==
+                      _passwordAgianController.text) {
+                    /* print('_passwordController=' + _passwordController.text);
                     print(
                         '_errorpPasswordAgian=' + _passwordAgianController.text);*/
 
                     sentData();
-                  }else{
+                  } else {
+                    errorAlert('Error!!', 'Password ไม่ตรงกัน!');
                     print('password ไม่ตรงกัน!! ');
                   }
                 } else if (_userController.text == '' &&
@@ -192,12 +195,14 @@ class _registerState extends State<register> {
                   _errorUser = 'โปรดใส่ข้อมูลUser';
                   _errorpPasswordAgian = 'โปรดใส่พาสเวิร์ดอีกครั้ง!';
                   _errorpPassword = null;
+                  //errorAlert('Error!!','$_errorUser และ $_errorpPasswordAgian');
                   print('โปรดใส่ข้อมูลUser');
                 } else if (_userController.text != '' &&
                     _passwordController.text == '' &&
                     _passwordAgianController.text == '') {
                   _errorpPassword = 'โปรดใส่Password';
                   _errorUser = null;
+                  //errorAlert('Error!!', '$_errorpPassword');
                   //_errorpPasswordAgian = null;
 
                 } else if (_userController.text != '' &&
@@ -205,11 +210,13 @@ class _registerState extends State<register> {
                     _passwordAgianController.text == '') {
                   _errorpPasswordAgian = '*โปรดใส่Passwordอีกครั้ง';
                   _errorUser = null;
+                  //errorAlert('Error!!', _errorpPasswordAgian);
                   //_errorpPasswordAgian = null;
 
                 } else {
                   _errorUser =
                       _errorpPassword = _errorpPasswordAgian = 'โปรดใส่ข้อมูล';
+                  //errorAlert('Error!!', 'โปรดใส่ข้อมูล');
                 }
                 setState(() {});
               },
@@ -219,20 +226,26 @@ class _registerState extends State<register> {
       ),
     );
   }
+
   var endPoint = 'http://203.154.83.62:1238/user/register';
-  Future sentData()async{
-    var dataRegsiter ={};
-    dataRegsiter['username']=_userController.text.trim();//ตัดช่องว่างหน้าหลังง
-    dataRegsiter['password']=_passwordController.text.trim();
+
+  Future sentData() async {
+    var dataRegsiter = {};
+    dataRegsiter['username'] =
+        _userController.text.trim(); //ตัดช่องว่างหน้าหลังง
+    dataRegsiter['password'] = _passwordController.text.trim();
     //print(dataRegsiter);
     var jsonDataSent = jsonEncode(dataRegsiter);
     print('datasent=$jsonDataSent');
-   var response = await http.post(endPoint,body: jsonDataSent);
-   print(response.statusCode);
-   print(response.body);
-   if(response.statusCode==200){
-     print('สมัครเพิ่มสำเร็จ');
-   }
+    var response = await http.post(endPoint, body: jsonDataSent);
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      print('สมัครเพิ่มสำเร็จ');
+      myAlert('สมัคร', 'สมัครสมาชิกสำเร็จ');
+    } else {
+      errorAlert('Error!!!${response.statusCode}', 'สมัครสมาชิกไม่สำเร็จ!!');
+    }
   }
 
   Widget cancleButton() {
@@ -259,6 +272,55 @@ class _registerState extends State<register> {
           )
         ],
       ),
+    );
+  }
+
+  void myAlert(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('$title'),
+          content: Text('$content'),
+          actions: [
+            FlatButton(
+                onPressed: () {
+                  MaterialPageRoute rout = MaterialPageRoute(
+                    builder: (context) => login(),
+                  );
+                  Navigator.pushAndRemoveUntil(context, rout, (route) => false);
+                },
+                child: Text('ตกลง')),
+            FlatButton(
+                onPressed: () {
+                  MaterialPageRoute rout = MaterialPageRoute(
+                    builder: (context) => login(),
+                  );
+                  Navigator.pushAndRemoveUntil(context, rout, (route) => false);
+                },
+                child: Text('ยกเลิก'))
+          ],
+        );
+      },
+    );
+  }
+
+  void errorAlert(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('$title'),
+          content: Text('$content'),
+          actions: [
+            FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('ตกลง'))
+          ],
+        );
+      },
     );
   }
 }

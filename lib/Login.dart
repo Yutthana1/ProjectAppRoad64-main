@@ -6,6 +6,7 @@ import 'package:approad_project64/main_User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 //import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,21 +22,27 @@ class _loginState extends State<login> {
   TextEditingController _userController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   String userId;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     autoLogIn();
   }
+
   Future<Null> autoLogIn() async {
-    try{
-       SharedPreferences prefs = await SharedPreferences.getInstance();
-        userId = prefs.getString('userId');
-      if (userId != null ) {
-        MaterialPageRoute route = MaterialPageRoute(builder: (context) => HomePage(),);
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      userId = prefs.getString('userId');
+      if (userId != null) {
+        MaterialPageRoute route = MaterialPageRoute(
+          builder: (context) => HomePage(),
+        );
         Navigator.pushAndRemoveUntil(context, route, (route) => false);
       }
-    }catch(e){print(e);}
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -57,7 +64,6 @@ class _loginState extends State<login> {
               loginButton(), //ปุ่ม login
               SizedBox(height: 20),
               registerTextField('สมัครสมาชิก'),
-              Text('userId= $userId'),
             ],
           ),
           color: Colors.white,
@@ -119,8 +125,8 @@ class _loginState extends State<login> {
   Future<Null> checkAuthen() async {
     String endPoint = 'http://203.154.83.62:1238/user/login';
     var data = jsonEncode({
-      'username': _userController.text,
-      'password': _passwordController.text
+      'username': _userController.text.trim(),
+      'password': _passwordController.text.trim()
     });
     try {
       var response = await http.post(endPoint, body: data);
@@ -133,7 +139,8 @@ class _loginState extends State<login> {
             //เช็ค token ว่ามี 3 ส่วนไหม
             var payload = tokenSplit1[1]; //token payload
             var nomalizePayload = base64Url.normalize(payload);
-            var resp = utf8.decode(base64Url.decode(nomalizePayload)); //ทำให้อยู่ในรูปแบบที่อ่านได้ utf-8
+            var resp = utf8.decode(base64Url
+                .decode(nomalizePayload)); //ทำให้อยู่ในรูปแบบที่อ่านได้ utf-8
             var jsonPayload = json.decode(resp);
             // print(jsonPayload);
             //print(jsonPayload['user_id']);
@@ -146,31 +153,36 @@ class _loginState extends State<login> {
 
           } else {
             print('Invalid Token length==3!!!');
+            errorAlert('Error!!!','Invalid Token length==3!!!');
           }
         } else {
           print('ไม่มี token มาด้วย!!');
+          errorAlert('Error!!!','ไม่มี token มาด้วย!!');
         }
       } else {
         print('ไม่พบข้อมูล user!!');
+        errorAlert('Error!!!','ไม่พบข้อมูล user!!');
       }
     } catch (e) {
+      errorAlert('Error!!!','ไม่สามารถเข้าสู่ระบบได้ กรูณาลองใหม่อีกครั้ง');
       print('Error !! $e');
     }
   }
 
 // สร้างหน้าที่จะไปแบบ แยก user กับ admin โดยใส่ rout เส้นทางที่จะไป (mypage = หน้าที่จะไป)
   Future<Null> routeToService(Widget mypage, String token, String id) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance(); //auto login get instant local
+    SharedPreferences preferences =
+        await SharedPreferences.getInstance(); //auto login get instant local
     preferences.setString('Token', token); //ฝังลงนนแอป
-    preferences.setString('userId', id);//ฝังลงนนแอป
-    preferences.setBool('isLoggedIn', true);//ฝังลงนนแอป
-
+    preferences.setString('userId', id); //ฝังลงนนแอป
+    preferences.setBool('isLoggedIn', true); //ฝังลงนนแอป
 
     MaterialPageRoute route = MaterialPageRoute(
       builder: (context) => mypage,
     );
     //Navigator.push(context, route); //ไปหน้าใหม่แบบ push ลง stack ซ้อนทับกันไปเรื่อยๆ
-      Navigator.pushAndRemoveUntil(context, route, (route) => false);//ไปหน้าใหม่ โดย ลบหน้าเก่าที่อยู่บน stack ออกให้หมด
+    Navigator.pushAndRemoveUntil(context, route,
+        (route) => false); //ไปหน้าใหม่ โดย ลบหน้าเก่าที่อยู่บน stack ออกให้หมด
   }
 
   Widget registerTextField(String text) {
@@ -246,6 +258,25 @@ class _loginState extends State<login> {
           ),
         ),
       ),
+    );
+  }
+
+  void errorAlert(String title,String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('$title',style: TextStyle(fontSize: 24 ,color: Colors.red),),
+          content: Text('$content'),
+          actions: [
+            FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('ตกลง'))
+          ],
+        );
+      },
     );
   }
 }

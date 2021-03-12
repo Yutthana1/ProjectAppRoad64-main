@@ -21,7 +21,7 @@ class reportroad extends StatefulWidget {
 class _reportroadState extends State<reportroad> {
   int _valueInt;
   String _dropdownValue;
-  List _listValue = [0,1,2,3];
+  List _listValue = [0, 1, 2, 3];
   List _listItem = ['หลุม', 'ซ่อมปะ', 'แตกร้าว', 'ปกติ'];
 
   DateTime _dateTimeSelect = DateTime.now();
@@ -215,12 +215,14 @@ class _reportroadState extends State<reportroad> {
           color: HexColor('#3b38ea'),
           onPressed: () {
             _upload(img);
-            MaterialPageRoute route =MaterialPageRoute(builder: (context) => HomePage(),);
-            Navigator.pushAndRemoveUntil(context, route, (route) => false);
+            /*MaterialPageRoute route = MaterialPageRoute(
+              builder: (context) => HomePage(),
+            );
+            Navigator.pushAndRemoveUntil(context, route, (route) => false);*/
             //print('valuint=$_valueInt');
             //print(' date time now : ${_dateTimeSelect}');
             //print('Drop down vlue =$_dropdownValue');
-           // _uploadToserver();
+            // _uploadToserver();
           },
           icon: Icon(
             Icons.save,
@@ -338,7 +340,101 @@ class _reportroadState extends State<reportroad> {
     }
   }
 
-  _uploadToserver() {
+  final String endPoint = "http://203.154.83.62:1238/user/upload_file";
+
+  _upload(File file) async {
+    if (img != null) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String userId = preferences.getString('userId');
+
+      String fileName = file.path.split('/').last;
+      FormData data = FormData.fromMap({
+        "file": await MultipartFile.fromFile(
+          file.path,
+          filename: fileName,
+        ),
+        "userid": userId,
+        //'dateTime':_dateTimeSelect,
+        'gps_latitude': lat,
+        'gps_longitude': lng,
+        'crack_type': _valueInt,
+        'detail': _controllerDetails.text
+      });
+      //print(fileName);
+      print(data.fields);
+      Dio dio = new Dio();
+      dio.post(endPoint, data: data).then((response) {
+        var jsonResponse = jsonDecode(response.data);
+        print('jsonResponse= $jsonResponse');
+        print(response.statusCode);
+        print(response.data);
+        if (response.statusCode == 200) {
+          myAlert('เพิ่มสำเร็จ', 'ขอบคุณสำหรับการรายงานครับ');
+        } else {
+          myAlert('Error!!! ${response.statusCode.toString()}',
+              'เพิ่มไม่สำเร็จ กรุณาลองใหม่อีกครั้ง\n${response.data}');
+        }
+
+        /*var testData = jsonResponse['histogram_counts'].cast<double>();
+        var averageGrindSize = jsonResponse['average_particle_size'];*/
+      }).catchError((error) {
+        print(error);
+      });
+    }
+  }
+
+  void myAlert(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('$title'),
+          content: Text('$content'),
+          actions: [
+            FlatButton(
+                onPressed: () {
+                  MaterialPageRoute route = MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  );
+                  Navigator.pushAndRemoveUntil(
+                      context, route, (route) => false);
+                },
+                child: Text('ตกลง')),
+            FlatButton(
+                onPressed: () {
+                  MaterialPageRoute route = MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  );
+                  Navigator.pushAndRemoveUntil(
+                      context, route, (route) => false);
+                },
+                child: Text('ยกเลิก'))
+          ],
+        );
+      },
+    );
+  }
+
+  void errorAlert(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('$title'),
+          content: Text('$content'),
+          actions: [
+            FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('ตกลง'))
+          ],
+        );
+      },
+    );
+  }
+
+/*_uploadToserver() {
     if (img != null) {
       //String b64 = base64Encode(img.readAsBytesSync());
       //print('b64=$b64');
@@ -357,39 +453,5 @@ class _reportroadState extends State<reportroad> {
       //-----------------------------------------------------------------------------
 
     }
-  }
-    final String endPoint = "http://203.154.83.62:1238/user/upload_file";
-   _upload(File file) async {
-    if (img != null) {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      String userId =  preferences.getString('userId');
-
-      String fileName = file.path.split('/').last;
-      FormData data = FormData.fromMap({
-        "file": await MultipartFile.fromFile(
-          file.path,
-          filename: fileName,
-        ),
-        "userid": userId,
-        //'dateTime':_dateTimeSelect,
-        'gps_latitude':lat,
-        'gps_longitude':lng,
-        'crack_type':_valueInt,
-        'detail':_controllerDetails.text
-
-      });
-      //print(fileName);
-      print(data.fields);
-      Dio dio = new Dio();
-      dio.post(endPoint, data: data).then((response) {
-        var jsonResponse = jsonDecode(response.data);
-        print('jsonResponse= $jsonResponse');
-        print(response.statusCode);
-        print(response.data);
-
-        /*var testData = jsonResponse['histogram_counts'].cast<double>();
-        var averageGrindSize = jsonResponse['average_particle_size'];*/
-      }).catchError((error) => print(error));
-    }
-  }
+  }*/
 }
