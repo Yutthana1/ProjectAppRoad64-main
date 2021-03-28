@@ -12,7 +12,7 @@ class roadhistory extends StatefulWidget {
 }
 
 class _roadhistoryState extends State<roadhistory> {
-  List<reportRecordModel> reportRecordList = []; //ทำถึงนี้นะ
+  List<reportRecordModel> reportRecordList = [];
   //List<RoadhistoryModel> RoadHistoryList=[];
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _roadhistoryState extends State<roadhistory> {
                 child: Image.network(
                     'http://203.154.83.62:1238/photo/${reportRecordList[index].userIdFk}/${reportRecordList[index].photo}')),
             title: Text(
-              '${reportRecordList[index].crackType}',
+              '${indexType(reportRecordList[index].crackType)}',
               style: TextStyle(fontSize: 22),
             ),
             trailing: Text('${reportRecordList[index].roadId}'),
@@ -68,4 +68,18 @@ class _roadhistoryState extends State<roadhistory> {
       ),
     );
   }
+  String indexType(int type){
+    if(type==0){
+      return 'หลุม';
+    }else if(type==1){
+      return 'ซ่อมปะ';
+    }else if(type==2){
+      return 'แตกร้าว';
+    }
+    else if(type==3){
+      return 'ปกติ';
+    }
+
+  }
+
 }

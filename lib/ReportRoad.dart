@@ -21,8 +21,8 @@ class reportroad extends StatefulWidget {
 class _reportroadState extends State<reportroad> {
   int _valueInt;
   String _dropdownValue;
-  List _listValue = [0, 1, 2, 3];
-  List _listItem = ['หลุม', 'ซ่อมปะ', 'แตกร้าว', 'ปกติ'];
+  List _listValue = [0, 1, 2];
+  List _listItem = ['หลุม', 'ซ่อมปะ', 'แตกร้าว'];
 
   DateTime _dateTimeSelect = DateTime.now();
   TextEditingController _controllerDetails =
@@ -118,13 +118,13 @@ class _reportroadState extends State<reportroad> {
                 'ประเภท',
                 style: TextStyle(color: Colors.red),
               ),
-              value: _valueInt,
+              value: _dropdownValue,
               onChanged: (newValue) {
                 setState(() {
-                  _valueInt = newValue;
+                  _dropdownValue = newValue;
                 });
               },
-              items: _listValue.map((valueItem) {
+              items: _listItem.map((valueItem) {
                 return DropdownMenuItem(
                     value: valueItem, child: Text(valueItem.toString()));
               }).toList()),
@@ -343,7 +343,16 @@ class _reportroadState extends State<reportroad> {
   final String endPoint = "http://203.154.83.62:1238/user/upload_file";
 
   _upload(File file) async {
+
     if (img != null) {
+      int _varDropInt;
+      if(_dropdownValue=='หลุม'){
+        _varDropInt=0;
+      }else if(_dropdownValue=='ซ่อมปะ'){
+        _varDropInt=1;
+      }else if(_dropdownValue=='แตกร้าว'){
+        _varDropInt=2;
+      }
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String userId = preferences.getString('userId');
 
@@ -357,10 +366,11 @@ class _reportroadState extends State<reportroad> {
         //'dateTime':_dateTimeSelect,
         'gps_latitude': lat,
         'gps_longitude': lng,
-        'crack_type': _valueInt,
+        'crack_type': _varDropInt,
         'detail': _controllerDetails.text
       });
       //print(fileName);
+     // print(_varDropInt);
       print(data.fields);
       Dio dio = new Dio();
       dio.post(endPoint, data: data).then((response) {
@@ -379,6 +389,8 @@ class _reportroadState extends State<reportroad> {
         var averageGrindSize = jsonResponse['average_particle_size'];*/
       }).catchError((error) {
         print(error);
+        myAlert('Error!!! ',
+            'เพิ่มไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
       });
     }
   }

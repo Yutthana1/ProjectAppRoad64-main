@@ -180,10 +180,10 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           UserAccountsDrawerHeader(
             accountName: Text(
-              'สวัสดี คุณ $_user_id Login=$_isLoggedIn',
+              'สวัสดี คุณ $_user_id ',
               style: TextStyle(fontSize: 20),
             ),
-            accountEmail: Text('Token:$_Token'),
+            //accountEmail: Text('Token:$_Token'),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Icon(
