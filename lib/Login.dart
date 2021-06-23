@@ -5,6 +5,7 @@ import 'package:approad_project64/Register.dart';
 import 'package:approad_project64/main_User.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 
 //import 'package:localstorage/localstorage.dart';
@@ -48,10 +49,114 @@ class _loginState extends State<login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login page'),
+      /* appBar: AppBar(
+        title: Text('ล็อคอิน'),
+      ),*/
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+            HexColor('#F4656D'),
+            HexColor('#E4CEE0'),
+
+            /* Colors.purple[600],
+            Colors.purple[500],
+            Colors.purple[300],*/
+          ]),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 80),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Text(
+                    'ล็อคอิน',
+                    style: TextStyle(fontSize: 38, color: Colors.white),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    'ยินด้อนรับเข้าสู่ระบบแจ้งถนนชำรุด',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(40.0),
+                          topRight: Radius.circular(40.0))),
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 60),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 20, //ขนาดของเงา
+                                offset: Offset(0, 10), //ตำแหน่งแสงและเงา
+                                color: Color.fromRGBO(225, 95, 27, 0.3),
+                              )
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey[200]))),
+                                child: userTextField('ผู้ใช้งาน'),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey[200]))),
+                                child: passWordTextField('รหัสผ่าน'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 40),
+                        Container(
+                          height: 50,
+                          margin: EdgeInsets.symmetric(horizontal: 50),
+
+                          /*decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: Colors.blue[400]),*/
+                          child: loginButton(),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          child: registerButton('สมัครสมาชิก'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-      body: SingleChildScrollView(
+      /*body: SingleChildScrollView(
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +173,7 @@ class _loginState extends State<login> {
           ),
           color: Colors.white,
         ),
-      ),
+      ),*/
     );
   }
 
@@ -82,7 +187,7 @@ class _loginState extends State<login> {
               child: SizedBox(
             height: 55.0,
             child: RaisedButton(
-              color: Colors.blue,
+              color: HexColor("#FF9292"),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
@@ -153,18 +258,18 @@ class _loginState extends State<login> {
 
           } else {
             print('Invalid Token length==3!!!');
-            errorAlert('Error!!!','Invalid Token length==3!!!');
+            errorAlert('Error!!!', 'Invalid Token length==3!!!');
           }
         } else {
           print('ไม่มี token มาด้วย!!');
-          errorAlert('Error!!!','ไม่มี token มาด้วย!!');
+          errorAlert('Error!!!', 'ไม่มี token มาด้วย!!');
         }
       } else {
         print('ไม่พบข้อมูล user!!');
-        errorAlert('Error!!!','ไม่พบข้อมูล user!!');
+        errorAlert('Error!!!', 'ไม่พบข้อมูล user!!');
       }
     } catch (e) {
-      errorAlert('Error!!!','ไม่สามารถเข้าสู่ระบบได้ กรูณาลองใหม่อีกครั้ง');
+      errorAlert('Error!!!', 'ไม่สามารถเข้าสู่ระบบได้ กรูณาลองใหม่อีกครั้ง');
       print('Error !! $e');
     }
   }
@@ -183,6 +288,21 @@ class _loginState extends State<login> {
     //Navigator.push(context, route); //ไปหน้าใหม่แบบ push ลง stack ซ้อนทับกันไปเรื่อยๆ
     Navigator.pushAndRemoveUntil(context, route,
         (route) => false); //ไปหน้าใหม่ โดย ลบหน้าเก่าที่อยู่บน stack ออกให้หมด
+  }
+
+  Widget registerButton(String str) {
+    return Container(
+      height: 55.0,
+      width: MediaQuery.of(context).size.width*0.62,
+      child: RaisedButton(
+        color: Colors.purple[300],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        child: Text(str,style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),),
+        onPressed: (){},
+      ),
+    );
   }
 
   Widget registerTextField(String text) {
@@ -205,68 +325,74 @@ class _loginState extends State<login> {
     );
   }
 
-  Widget userTextField(String txtLabel, String hintTxt) {
+  Widget userTextField(String txtLabel /*, String hintTxt*/) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(0),
       child: TextField(
         controller: _userController, //ผูก ยูเซอร์
         keyboardType: TextInputType.name,
         decoration: InputDecoration(
-          errorText: (_errorUser != '') ? _errorUser : null,
-          prefixIcon: Icon(Icons.person),
-          hintText: hintTxt,
-          labelText: txtLabel,
-          labelStyle: TextStyle(
-            fontSize: 24,
-          ),
-          border: OutlineInputBorder(
+            errorText: (_errorUser != '') ? _errorUser : null,
+            prefixIcon: Icon(Icons.person),
+            //hintText: hintTxt,
+            labelText: txtLabel,
+            labelStyle: TextStyle(
+              fontSize: 24,
+            ),
+            border: InputBorder.none
+            /*border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30.0), //กำหนดให้ textfild โค้ง
-          ),
-        ),
+          ),*/
+            ),
       ),
     );
   }
 
-  Widget passWordTextField(String txtLabel, String hintTxt) {
+  Widget passWordTextField(String txtLabel /*, String hintTxt*/) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(0),
       child: TextField(
         //axLength: 20,
         controller: _passwordController, //ผูก พาสเวิร์ด
         obscureText: _secureText, //ซ่อน password
         keyboardType: TextInputType.visiblePassword,
         decoration: InputDecoration(
-          errorText: (_errorpPassword != '') ? _errorpPassword : null,
-          suffixIcon: IconButton(
-            icon: Icon(_secureText
-                ? Icons.remove_red_eye_outlined
-                : Icons.remove_red_eye), //เปลี่ยน icon ซ่อน password
-            onPressed: () {
-              setState(() {
-                _secureText = !_secureText; //เปลี่ยนให้เป็นรูปตา แสดง พาสเวิร์ด
-              });
-            },
-          ),
-          prefixIcon: Icon(
-            Icons.security,
-          ),
-          hintText: hintTxt,
-          labelText: txtLabel,
-          labelStyle: TextStyle(fontSize: 24),
-          border: OutlineInputBorder(
+            errorText: (_errorpPassword != '') ? _errorpPassword : null,
+            suffixIcon: IconButton(
+              icon: Icon(_secureText
+                  ? Icons.remove_red_eye_outlined
+                  : Icons.remove_red_eye), //เปลี่ยน icon ซ่อน password
+              onPressed: () {
+                setState(() {
+                  _secureText =
+                      !_secureText; //เปลี่ยนให้เป็นรูปตา แสดง พาสเวิร์ด
+                });
+              },
+            ),
+            prefixIcon: Icon(
+              Icons.security,
+            ),
+            //hintText: hintTxt,
+            labelText: txtLabel,
+            labelStyle: TextStyle(fontSize: 24),
+            border: InputBorder.none
+            /* border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30.0), //กำหนดให้ textfild โค้ง
-          ),
-        ),
+          ),*/
+            ),
       ),
     );
   }
 
-  void errorAlert(String title,String content) {
+  void errorAlert(String title, String content) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('$title',style: TextStyle(fontSize: 24 ,color: Colors.red),),
+          title: Text(
+            '$title',
+            style: TextStyle(fontSize: 24, color: Colors.red),
+          ),
           content: Text('$content'),
           actions: [
             FlatButton(
