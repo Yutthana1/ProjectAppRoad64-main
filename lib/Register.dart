@@ -23,31 +23,115 @@ class _registerState extends State<register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Register page'),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              userTextField('กรอก User หรือ email', 'ชื่อผู้ใช้งานหรืออีเมล์'),
-              passWordTextField('กรุณาใส่ Password', 'พาสเวิร์ด'),
-              passWordTextFieldAgian(
-                  'ใส่ Password อีกครั้ง', 'ใส่พาสเวิร์ดอีกครั้ง'),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    registerButton(),
-                    cancleButton(),
-                  ],
+      /*appBar: AppBar(
+        title: Text('สมัครสมาชิก'),
+      ),*/
+      body: Container(
+        //margin: EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(begin: Alignment.topCenter, colors: [
+            HexColor('#845EC2'),
+            HexColor('#A2C4C6'),
+
+            /*Colors.blue[600],
+            Colors.blue[500],
+            Colors.blue[300],*/
+          ]),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(height: 80),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Text(
+                    'สมัครสมาชิก',
+                    style: TextStyle(
+                      fontSize: 38,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                ],
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(40.0),
+                          topRight: Radius.circular(40.0))),
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 8),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 20, //ขนาดของเงา
+                                offset: Offset(0, 10), //ตำแหน่งแสงและเงา
+                                color: Color.fromRGBO(225, 95, 27, 0.3),
+                              )
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey[200]))),
+                                child: userTextField('ไอดี', 'ชื่อผู้ใช้งานหรืออีเมล์'),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey[200]))),
+                                child: passWordTextField('รหัสผ่าน', 'รหัสผ่าน'),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey[200]))),
+                                child: passWordTextFieldAgian('ยืนยันรหัสผ่าน', 'ใส่รหัสผ่านอีกครั้ง'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 40),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            registerButton(),
+                            cancleButton(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ],
-          ),
-          //color: HexColor('#DEDEDE'),
+            ),
+            //userTextField('กรอก User หรือ Email', 'ชื่อผู้ใช้งานหรืออีเมล์'),
+            //passWordTextField('กรุณาใส่ Password', 'พาสเวิร์ด'),
+            /*passWordTextFieldAgian(
+                'ใส่ Password อีกครั้ง', 'ใส่พาสเวิร์ดอีกครั้ง'),*/
+
+          ],
         ),
+        //color: HexColor('#DEDEDE'),
       ),
     );
   }
@@ -159,12 +243,12 @@ class _registerState extends State<register> {
             height: 55.0,
             width: MediaQuery.of(context).size.width * .4,
             child: RaisedButton(
-              color: Colors.green,
+              color: Colors.blue[600],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
               child: Text(
-                'register'.toUpperCase(),
+                'สมัครสมาชิก'.toUpperCase(),
                 style: TextStyle(
                     fontSize: 24, color: Colors.white, fontFamily: 'kanit'),
               ),
@@ -257,12 +341,12 @@ class _registerState extends State<register> {
             height: 55.0,
             width: MediaQuery.of(context).size.width * .4,
             child: RaisedButton(
-                color: Colors.red,
+                color: Colors.red[600],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
                 child: Text(
-                  'Cancle'.toUpperCase(),
+                  'ยกเลิก'.toUpperCase(),
                   style: TextStyle(
                       fontSize: 24, color: Colors.white, fontFamily: 'kanit'),
                 ),

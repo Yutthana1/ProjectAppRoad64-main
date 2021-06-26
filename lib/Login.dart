@@ -192,9 +192,9 @@ class _loginState extends State<login> {
                 borderRadius: BorderRadius.circular(30.0),
               ),
               child: Text(
-                'login'.toUpperCase(),
+                'เข้าสู่ระบบ'.toUpperCase(),
                 style: TextStyle(
-                    fontSize: 24, color: Colors.white, fontFamily: 'kanit'),
+                    fontSize: 22, color: Colors.white, fontFamily: 'kanit'),
               ),
               onPressed: () {
                 if (_userController.text != '' &&
@@ -299,8 +299,13 @@ class _loginState extends State<login> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        child: Text(str,style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),),
-        onPressed: (){},
+        child: Text(str.toUpperCase(),style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold),),
+        onPressed: (){ Navigator.push(
+          context,
+          new MaterialPageRoute(
+            builder: (context) => register(),
+          ),
+        );},
       ),
     );
   }
