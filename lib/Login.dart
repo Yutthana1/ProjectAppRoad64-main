@@ -247,7 +247,7 @@ class _loginState extends State<login> {
             var resp = utf8.decode(base64Url
                 .decode(nomalizePayload)); //ทำให้อยู่ในรูปแบบที่อ่านได้ utf-8
             var jsonPayload = json.decode(resp);
-            // print(jsonPayload);
+            print(jsonPayload);
             //print(jsonPayload['user_id']);
             String id = jsonPayload['user_id'];
             String token = resJsDe[0]['token'];

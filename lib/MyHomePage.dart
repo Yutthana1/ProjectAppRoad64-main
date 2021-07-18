@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:ui';
-
+import 'package:http/http.dart' as http;
 import 'package:approad_project64/Login.dart';
 import 'package:approad_project64/Register.dart';
 import 'package:approad_project64/utility/signout.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -20,14 +22,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _user_id, _Token;
+  String _user_id, _Token,_name,_lastname,_phone;
   bool _isLoggedIn;
+  int _point;
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _getUser();
+
   }
 
   Future<Null> _getUser() async {
@@ -37,6 +42,7 @@ class _HomePageState extends State<HomePage> {
       _Token = preferences.getString('Token');
       _isLoggedIn = preferences.getBool('isLoggedIn');
     });
+    getProfile();
   }
 
   @override
@@ -44,6 +50,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('เมนู'),
+        backgroundColor: Colors.orangeAccent,
       ),
       body: GridView.count(
         //primary: false,
@@ -180,11 +187,13 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           UserAccountsDrawerHeader(
             accountName: Text(
-              'สวัสดี คุณ $_user_id ',
-              style: TextStyle(fontSize: 20),
+              '$_name $_lastname',
+              style: TextStyle(fontSize: 16),
             ),
-            //accountEmail: Text('Token:$_Token'),
+            accountEmail: Text('เบอร์โทร $_phone\t\t\t\tคะแนน $_point'),
+
             currentAccountPicture: CircleAvatar(
+
               backgroundColor: Colors.white,
               child: Icon(
                 Icons.account_circle,
@@ -230,5 +239,33 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  final String endPoint = "http://203.154.83.62:1238/user/profileID";
+  Future getProfile() async{
+
+    int intID_user = int.parse(_user_id);
+    print(intID_user);
+    Map data = {
+      'user_id': intID_user
+    };
+    //encode Map to JSON
+    var body = json.encode(data);
+
+    var response = await http.post(endPoint,
+        headers: {"Content-Type": "application/json"},
+        body: body
+    );
+
+    if(response.statusCode==200){
+      var bodyDecode = jsonDecode(response.body);
+      _name = bodyDecode['name'];
+      _lastname = bodyDecode['lastname'];
+      _phone = bodyDecode['phone'];
+      _point = bodyDecode['point'];
+    }
+    print("${response.statusCode}");
+    print("${response.body}");
+
   }
 }
