@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+
 
 import 'Personal_information.dart';
 import 'ReportRoad.dart';
@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
       _Token = preferences.getString('Token');
       _isLoggedIn = preferences.getBool('isLoggedIn');
     });
+
     getProfile();
   }
 
@@ -219,18 +220,6 @@ class _HomePageState extends State<HomePage> {
                   leading: Icon(Icons.logout),
                   onTap: () => logOut(context),
                 ),
-          /*ListTile(
-            title: Text('Register'),
-            leading: Icon(Icons.person_add_alt_1_sharp),
-            onTap: () => {
-              Navigator.push(
-                context,
-                new MaterialPageRoute(
-                  builder: (context) => new register(),
-                ),
-              ).then((value) => null),
-            },
-          ),*/
           ListTile(
             title: Text('Close'),
             leading: Icon(Icons.close),
@@ -258,11 +247,14 @@ class _HomePageState extends State<HomePage> {
     );
 
     if(response.statusCode==200){
-      var bodyDecode = jsonDecode(response.body);
-      _name = bodyDecode['name'];
-      _lastname = bodyDecode['lastname'];
-      _phone = bodyDecode['phone'];
-      _point = bodyDecode['point'];
+      setState(() {
+        var bodyDecode = jsonDecode(response.body);
+        this._name = bodyDecode['name'];
+        this._lastname = bodyDecode['lastname'];
+        this._phone = bodyDecode['phone'];
+        this._point = bodyDecode['point'];
+      });
+
     }
     print("${response.statusCode}");
     print("${response.body}");

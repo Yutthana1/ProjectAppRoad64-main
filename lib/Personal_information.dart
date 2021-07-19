@@ -1,16 +1,22 @@
 import 'package:approad_project64/MyHomePage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 class personaluser extends StatefulWidget {
   @override
   _personaluserState createState() => _personaluserState();
 }
 
 class _personaluserState extends State<personaluser> {
+  var _user_id,_name,_lastname,_phone,_point;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getProfile();
   }
 
   @override
@@ -70,7 +76,7 @@ class _personaluserState extends State<personaluser> {
                   SizedBox(
                     height: 10.0,
                   ),
-                  Text('Erza Scarlet',
+                  Text('${_name} ${_lastname}',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20.0,
@@ -79,7 +85,7 @@ class _personaluserState extends State<personaluser> {
                     height: 10.0,
                   ),
                   Text(
-                    'S Class Mage',
+                    'เบอร์โทรศัพท์ ${_phone}',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 15.0,
@@ -129,13 +135,13 @@ class _personaluserState extends State<personaluser> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Guild",
+                                            "ที่อยู่",
                                             style: TextStyle(
                                               fontSize: 15.0,
                                             ),
                                           ),
                                           Text(
-                                            "FairyTail, Magnolia",
+                                            "-",
                                             style: TextStyle(
                                               fontSize: 12.0,
                                               color: Colors.grey[400],
@@ -145,7 +151,7 @@ class _personaluserState extends State<personaluser> {
                                       )
                                     ],
                                   ),
-                                  SizedBox(
+                                /*  SizedBox(
                                     height: 20.0,
                                   ),
                                   Row(
@@ -249,7 +255,7 @@ class _personaluserState extends State<personaluser> {
                                         ],
                                       )
                                     ],
-                                  ),
+                                  ),*/
                                 ],
                               ),
                             )))),
@@ -268,28 +274,9 @@ class _personaluserState extends State<personaluser> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                      child: Column(
-                    children: [
-                      Text(
-                        'Battles',
-                        style:
-                            TextStyle(color: Colors.grey[400], fontSize: 14.0),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Text(
-                        "111",
-                        style: TextStyle(
-                          fontSize: 15.0,
-                        ),
-                      )
-                    ],
-                  )),
-                  Container(
                     child: Column(children: [
                       Text(
-                        'Birthday',
+                        'อายุ',
                         style:
                             TextStyle(color: Colors.grey[400], fontSize: 14.0),
                       ),
@@ -297,7 +284,7 @@ class _personaluserState extends State<personaluser> {
                         height: 5.0,
                       ),
                       Text(
-                        'April 7th',
+                        '-',
                         style: TextStyle(
                           fontSize: 15.0,
                         ),
@@ -308,7 +295,7 @@ class _personaluserState extends State<personaluser> {
                       child: Column(
                     children: [
                       Text(
-                        'Age',
+                        'คะแนน',
                         style:
                             TextStyle(color: Colors.grey[400], fontSize: 14.0),
                       ),
@@ -316,7 +303,7 @@ class _personaluserState extends State<personaluser> {
                         height: 5.0,
                       ),
                       Text(
-                        '19 yrs',
+                        '${_point}',
                         style: TextStyle(
                           fontSize: 15.0,
                         ),
@@ -328,5 +315,41 @@ class _personaluserState extends State<personaluser> {
             )))
       ],
     );
+  }
+
+  final String endPoint = "http://203.154.83.62:1238/user/profileID";
+  Future getProfile() async{
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+       _user_id = preferences.getString('userId');
+    });
+    
+    int intID_user = int.parse(_user_id);
+    print(intID_user);
+    Map data = {
+      'user_id': intID_user
+    };
+    //encode Map to JSON
+    var body = json.encode(data);
+
+    var response = await http.post(endPoint,
+        headers: {"Content-Type": "application/json"},
+        body: body
+    );
+
+    if(response.statusCode==200){
+      setState(() {
+        var bodyDecode = jsonDecode(response.body);
+        this._name = bodyDecode['name'];
+        this._lastname = bodyDecode['lastname'];
+        this._phone = bodyDecode['phone'];
+        this._point = bodyDecode['point'];
+      });
+
+    }
+    print("${response.statusCode}");
+    print("${response.body}");
+
   }
 }
