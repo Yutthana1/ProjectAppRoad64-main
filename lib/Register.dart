@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:approad_project64/Login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:hexcolor/hexcolor.dart';
 
@@ -94,9 +95,10 @@ class _registerState extends State<register> {
                           child: Column(
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Container(
-                                    width: MediaQuery.of(context).size.width*0.4,
+                                    width: MediaQuery.of(context).size.width*0.35,
                                     decoration: BoxDecoration(
                                         border: Border(
                                             bottom: BorderSide(
@@ -104,7 +106,7 @@ class _registerState extends State<register> {
                                     child: nameTextField('ชื่อ', 'ชื่อ'),
                                   ),
                                   Container(
-                                    width: MediaQuery.of(context).size.width*0.4,
+                                    width: MediaQuery.of(context).size.width*0.35,
                                     decoration: BoxDecoration(
                                         border: Border(
                                             bottom: BorderSide(
@@ -360,7 +362,7 @@ class _registerState extends State<register> {
               child: Text(
                 'สมัครสมาชิก'.toUpperCase(),
                 style: TextStyle(
-                    fontSize: 24, color: Colors.white, fontFamily: 'kanit'),
+                    fontSize: 20, color: Colors.white, fontFamily: 'kanit'),
               ),
               onPressed: () {
                 if (_userController.text != '' &&
@@ -466,7 +468,7 @@ class _registerState extends State<register> {
                 child: Text(
                   'ยกเลิก'.toUpperCase(),
                   style: TextStyle(
-                      fontSize: 24, color: Colors.white, fontFamily: 'kanit'),
+                      fontSize: 20, color: Colors.white, fontFamily: 'kanit'),
                 ),
                 onPressed: () {
                   Navigator.pop(context);

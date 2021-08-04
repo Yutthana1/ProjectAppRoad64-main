@@ -288,7 +288,7 @@ class _reportroadState extends State<reportroad> {
     if (await canLaunch(googleUrl)) {
       await launch(googleUrl);
     } else {
-      throw 'Cannot Open Google Mapl $googleUrl'; // Could not open the map.
+      throw 'Cannot Open Google Map $googleUrl'; // Could not open the map.
     }
   }
 
@@ -371,7 +371,7 @@ class _reportroadState extends State<reportroad> {
       });
       //print(fileName);
      // print(_varDropInt);
-      print(data.fields);
+      print(data.files);
       Dio dio = new Dio();
       dio.post(endPoint, data: data).then((response) {
         var jsonResponse = jsonDecode(response.data);
