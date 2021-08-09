@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('เมนู'),
-        backgroundColor: Colors.orangeAccent,
+        //backgroundColor: Colors.orangeAccent,
       ),
       body: GridView.count(
         //primary: false,

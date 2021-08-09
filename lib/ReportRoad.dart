@@ -241,7 +241,7 @@ class _reportroadState extends State<reportroad> {
   Set<Marker> marker() {
     return <Marker>[
       Marker(
-        markerId: MarkerId('Loation1'),
+        markerId: MarkerId('Location1'),
         position: LatLng(lat, lng),
         infoWindow: InfoWindow(
           title: 'ตำแหน่งของคุณ',

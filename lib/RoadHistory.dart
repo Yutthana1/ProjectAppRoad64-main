@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:approad_project64/EditRoad.dart';
 import 'package:approad_project64/models/ReportRecordModel.dart';
 import 'package:dio/dio.dart';
 
@@ -27,22 +28,27 @@ class _roadhistoryState extends State<roadhistory> {
 
   Future<Null> loadRoadhistory() async {
    // WidgetsFlutterBinding.ensureInitialized(); //ทำงานที่ Thread นี้ให้จบก่อน
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString('userId');
-    var response = await http.post(endPoint,
-        body: jsonEncode({'user_id': userId}),
-        headers: {'Content-Type': 'application/json'});
-    if (response.statusCode == 200) {
-      //print(response.body);
-      final jsonDecoDE = jsonDecode(response.body);
-      //print(jsonDecoDE);
-      reportRecordList.clear();
-      jsonDecoDE.forEach((data) {
-        final dataOBJ = reportRecordModel.fromJson(data);
-        reportRecordList.add(dataOBJ);
-      });
-      setState(() {});
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String userId = prefs.getString('userId');
+      var response = await http.post(endPoint,
+          body: jsonEncode({'user_id': userId}),
+          headers: {'Content-Type': 'application/json'});
+      if (response.statusCode == 200) {
+        //print(response.body);
+        final jsonDecoDE = jsonDecode(response.body);
+        //print(jsonDecoDE);
+        reportRecordList.clear();
+        jsonDecoDE.forEach((data) {
+          final dataOBJ = reportRecordModel.fromJson(data);
+          reportRecordList.add(dataOBJ);
+        });
+        setState(() {});
+      }
+    }catch(e){
+      print(e);
     }
+
   }
 
   @override
@@ -52,7 +58,7 @@ class _roadhistoryState extends State<roadhistory> {
         title: Text('ประวัติแจ้งถนนชำรุด'),
       ),
       body: Container(
-        color: Colors.blue.shade200,
+        color: Colors.amber.shade200,
         child: ListView.builder(
           itemCount: reportRecordList.length,
           itemBuilder: (context, index) {
@@ -74,8 +80,14 @@ class _roadhistoryState extends State<roadhistory> {
                     crossAxisAlignment: WrapCrossAlignment.start,
                     children: [
                       IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          Navigator.push(context, new MaterialPageRoute(builder: (context) => new EditRoadHistory(reportRecordList,index),)).then((value)  {
+                            setState(() {
+                              loadRoadhistory();
+                            });
+                          });
+                        },
+                        icon: Icon(Icons.edit,color: Colors.green,),
                       ),
                       IconButton(
                         onPressed: () {
@@ -84,7 +96,7 @@ class _roadhistoryState extends State<roadhistory> {
                           });
                           deleteDialog('ลบข้อมูล', 'ยืนยันการลบ', index);
                         },
-                        icon: Icon(Icons.delete),
+                        icon: Icon(Icons.delete,color: Colors.red,),
                       ),
                     ],
                   ),
