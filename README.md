@@ -1,22 +1,5 @@
 # ใช้ Flutter + Googlemaps.
 
-A new Flutter application.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# ProjectAppRoad64" 
-"# ProjectAppRoad64" 
-"# ProjectAppRoad64" 
 
 ![222014178_263708838423234_4211343195582816731_n](https://user-images.githubusercontent.com/54610535/128677651-646ef0a9-ecb6-4956-a5d2-c6f9fe8c6879.jpg)
 ![220576669_1855789781261446_4704405409123816980_n](https://user-images.githubusercontent.com/54610535/128677655-2062812d-bf8b-4919-8d5e-3b3994c4a6e9.jpg)
