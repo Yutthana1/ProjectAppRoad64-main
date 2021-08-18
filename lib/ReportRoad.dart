@@ -340,7 +340,7 @@ class _reportroadState extends State<reportroad> {
     }
   }
 
-  final String endPoint = "http://203.154.83.62:1238/user/upload_file";
+  final String endPoint = "http://20.198.233.53:1230/user/upload_file";
 
   _upload(File file) async {
 
@@ -389,8 +389,8 @@ class _reportroadState extends State<reportroad> {
         var averageGrindSize = jsonResponse['average_particle_size'];*/
       }).catchError((error) {
         print(error);
-        myAlert('Error!!! ',
-            'เพิ่มไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+      /*  myAlert('Error!!! ',
+            'เพิ่มไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');*/
       });
     }
   }

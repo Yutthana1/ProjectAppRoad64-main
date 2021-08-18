@@ -426,7 +426,7 @@ class _registerState extends State<register> {
     );
   }
 
-  var endPoint = 'http://203.154.83.62:1238/user/register';
+  var endPoint = 'http://20.198.233.53:1230/user/register';
   Future sentData() async {
     var dataRegsiter = {};
     dataRegsiter['username'] =

@@ -228,15 +228,15 @@ class _loginState extends State<login> {
   }
 
   Future<Null> checkAuthen() async {
-    String endPoint = 'http://203.154.83.62:1238/user/login';
+    String endPoint = 'http://20.198.233.53:1230/user/login';
     var data = jsonEncode({
       'username': _userController.text.trim(),
       'password': _passwordController.text.trim()
     });
+    print(data);
     try {
       var response = await http.post(endPoint, body: data);
       var resJsDe = json.decode(response.body);
-
       if (response.statusCode == 200) {
         if (resJsDe[0]['token'] != null) {
           var tokenSplit1 = resJsDe[0]['token'].toString().split('.');

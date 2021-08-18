@@ -27,7 +27,7 @@ class EditRoadHistory extends StatefulWidget {
 
 class _EditRoadHistoryState extends State<EditRoadHistory> {
   TextEditingController _controllerDetails = TextEditingController();
-  String detail;
+  //String detail;
   List<reportRecordModel> reportRecordList;
   int index;
   var lat;
@@ -54,7 +54,8 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
       uid = reportRecordList[index].userIdFk;
       _cracktype = reportRecordList[index].crackType;
       _dropdownValue = ConvertTypeDropdown(_cracktype);
-      detail = reportRecordList[index].detail;
+      //detail = reportRecordList[index].detail;
+      _controllerDetails.text = reportRecordList[index].detail;
     });
     super.initState();
   }
@@ -79,7 +80,7 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
                 SizedBox(height: 12.0),
                 (img == null) ? Container() : showLatLngText(),
                 (img == null) ? Container() : buildDropdownButton(),
-                (img == null) ? Container() : detailsTextField(detail),
+                (img == null) ? Container() : detailsTextField( _controllerDetails.text),
                 (img == null) ? Container() : SaveReport(),
               ],
             )
@@ -134,7 +135,7 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
                 height: 250,
               )
             : Image.network(
-                "http://203.154.83.62:1238/photo/$uid/$img",
+                "http://20.198.233.53:1230/photo/$uid/$img",
                 fit: BoxFit.fill,
               ),
       ),
@@ -247,7 +248,7 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
   }
 
   Future<Null> _EditState() async {
-    final String endPoint = "http://203.154.83.62:1238/update/road";
+    final String endPoint = "http://20.198.233.53:1230/update/road";
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String userId = preferences.getString('userId');
     if (reportRecordList != null) {

@@ -317,7 +317,7 @@ class _personaluserState extends State<personaluser> {
     );
   }
 
-  final String endPoint = "http://203.154.83.62:1238/user/profileID";
+  final String endPoint = "http://20.198.233.53:1230/user/profileID";
   Future getProfile() async{
 
     SharedPreferences preferences = await SharedPreferences.getInstance();

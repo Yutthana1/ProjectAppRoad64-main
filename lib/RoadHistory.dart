@@ -24,7 +24,7 @@ class _roadhistoryState extends State<roadhistory> {
     loadRoadhistory();
   }
 
-  String endPoint = 'http://203.154.83.62:1238/select/road';
+  String endPoint = 'http://20.198.233.53:1230/select/road';
 
   Future<Null> loadRoadhistory() async {
    // WidgetsFlutterBinding.ensureInitialized(); //ทำงานที่ Thread นี้ให้จบก่อน
@@ -71,7 +71,7 @@ class _roadhistoryState extends State<roadhistory> {
                   leading: Container(
                       width: MediaQuery.of(context).size.width * 0.25,
                       child: Image.network(
-                          'http://203.154.83.62:1238/photo/${reportRecordList[index].userIdFk}/${reportRecordList[index].photo}')),
+                          'http://20.198.233.53:1230/photo/${reportRecordList[index].userIdFk}/${reportRecordList[index].photo}')),
                   title: Text(
                     '${indexType(reportRecordList[index].crackType)}',
                     style: TextStyle(fontSize: 20),
@@ -161,7 +161,7 @@ class _roadhistoryState extends State<roadhistory> {
   }
 
   DeleteReportByID(int road_id) async {
-    String path = "http://203.154.83.62:1238/delete/reportByid";
+    String path = "http://20.198.233.53:1230/delete/reportByid";
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('userId');
