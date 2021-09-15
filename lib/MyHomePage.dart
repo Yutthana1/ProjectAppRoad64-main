@@ -191,7 +191,12 @@ class _HomePageState extends State<HomePage> {
               '$_name $_lastname',
               style: TextStyle(fontSize: 16),
             ),
-            accountEmail: Text('เบอร์โทร $_phone\t\t\t\tคะแนน $_point'),
+            accountEmail: Row(
+              children: [
+                Icon(Icons.phone,size: 16,),
+                Text(': $_phone\t\t\t\tคะแนน $_point'),
+              ],
+            ),
 
             currentAccountPicture: CircleAvatar(
 

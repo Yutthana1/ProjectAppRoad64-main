@@ -38,6 +38,8 @@ dependencies:
   url_launcher: ^5.7.10
   dio: ^3.0.9
   shared_preferences: 0.5.7+2
+  awesome_dialog: ^2.1.1
+  frefresh: ^1.1.0
 
 #  localstorage: ^3.0.6
 
@@ -62,14 +64,15 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/location.jpg
-    - images/listdocument.jpg
-    - images/Settings-icon.png
-    - images/user-man-setting-icon.png
-    - images/document.png
-    - images/map.png
-    - images/user_man.png
-    - images/gallery.png
+#    - images/location.jpg
+#    - images/listdocument.jpg
+#    - images/Settings-icon.png
+#    - images/user-man-setting-icon.png
+#    - images/document.png
+#    - images/map.png
+#    - images/user_man.png
+#    - images/gallery.png
+    - images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

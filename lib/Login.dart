@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:approad_project64/MyHomePage.dart';
 import 'package:approad_project64/Register.dart';
 import 'package:approad_project64/main_User.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -30,6 +31,8 @@ class _loginState extends State<login> {
     super.initState();
     autoLogIn();
   }
+
+
 
   Future<Null> autoLogIn() async {
     try {
@@ -147,6 +150,7 @@ class _loginState extends State<login> {
                         Container(
                           child: registerButton('สมัครสมาชิก'),
                         ),
+                       // animationDialog_succes(),
                       ],
                     ),
                   ),
@@ -190,11 +194,12 @@ class _loginState extends State<login> {
               color: HexColor("#FF9292"),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
+                side: BorderSide(color: HexColor("#FF9292")),
               ),
               child: Text(
                 'เข้าสู่ระบบ'.toUpperCase(),
                 style: TextStyle(
-                    fontSize: 22, color: Colors.white, fontFamily: 'kanit'),
+                    fontSize: 18, color: Colors.white, fontFamily: 'kanit'),
               ),
               onPressed: () {
                 if (_userController.text != '' &&
@@ -269,7 +274,8 @@ class _loginState extends State<login> {
         errorAlert('Error!!!', 'ไม่พบข้อมูล user!!');
       }
     } catch (e) {
-      errorAlert('Error!!!', 'ไม่สามารถเข้าสู่ระบบได้ กรูณาลองใหม่อีกครั้ง');
+      animationDialog_Error();
+      //errorAlert('Error!!!', 'ไม่สามารถเข้าสู่ระบบได้ กรูณาลองใหม่อีกครั้ง');
       print('Error !! $e');
     }
   }
@@ -291,21 +297,32 @@ class _loginState extends State<login> {
   }
 
   Widget registerButton(String str) {
-    return Container(
-      height: 55.0,
-      width: MediaQuery.of(context).size.width*0.62,
-      child: RaisedButton(
-        color: Colors.purple[300],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        child: Text(str.toUpperCase(),style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold),),
-        onPressed: (){ Navigator.push(
-          context,
-          new MaterialPageRoute(
-            builder: (context) => register(),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0,0.0,8.0,0.0),
+      child: Container(
+        height: 50.0,
+        width: MediaQuery.of(context).size.width * 0.58,
+        child: RaisedButton(
+          color: Colors.white,
+          //color: Colors.purple[300],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            side: BorderSide(color: Colors.blue,width: 1.5)
           ),
-        );},
+          child: Text(
+            str.toUpperCase(),
+            style: TextStyle(
+                color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold,fontFamily: 'kanit'),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              new MaterialPageRoute(
+                builder: (context) => register(),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -342,7 +359,7 @@ class _loginState extends State<login> {
             //hintText: hintTxt,
             labelText: txtLabel,
             labelStyle: TextStyle(
-              fontSize: 24,
+              fontSize: 15,
             ),
             border: InputBorder.none
             /*border: OutlineInputBorder(
@@ -379,7 +396,7 @@ class _loginState extends State<login> {
             ),
             //hintText: hintTxt,
             labelText: txtLabel,
-            labelStyle: TextStyle(fontSize: 24),
+            labelStyle: TextStyle(fontSize: 15),
             border: InputBorder.none
             /* border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30.0), //กำหนดให้ textfild โค้ง
@@ -409,5 +426,49 @@ class _loginState extends State<login> {
         );
       },
     );
+  }
+
+  Widget animationDialog_succes() {
+    return AnimatedButton(
+      icon: Icons.add,
+      text: 'Succes Dialog',
+      color: Colors.green,
+      pressEvent: () {
+        AwesomeDialog(
+            context: context,
+            animType: AnimType.LEFTSLIDE,
+            headerAnimationLoop: false,
+            dialogType: DialogType.SUCCES,
+            showCloseIcon: true,
+            title: 'Succes',
+            desc:
+                'Dialog description here..................................................',
+            btnOkOnPress: () {
+              debugPrint('OnClcik');
+            },
+            btnCancelOnPress: () {
+              debugPrint('cancleClcik');
+            },
+            btnOkIcon: Icons.check_circle,
+            onDissmissCallback: (type) {
+              debugPrint('Dialog Dissmiss from callback $type');
+            })
+          ..show();
+      },
+    );
+  }
+
+   animationDialog_Error() {
+      return  AwesomeDialog(
+            context: context,
+            dialogType: DialogType.ERROR,
+            animType: AnimType.RIGHSLIDE,
+            headerAnimationLoop: true,
+            title: 'เข้าสู่ระบบไม่สำเร็จ',
+            desc:
+                'กรุณาลองลองใหม่อีกครั้ง',
+            btnOkOnPress: () {},
+            btnOkIcon: Icons.cancel,
+            btnOkColor: Colors.red)..show();
   }
 }
