@@ -32,8 +32,6 @@ class _loginState extends State<login> {
     autoLogIn();
   }
 
-
-
   Future<Null> autoLogIn() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -47,6 +45,14 @@ class _loginState extends State<login> {
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void dispose() {
+    _userController.dispose();
+    _passwordController.dispose();
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -93,7 +99,7 @@ class _loginState extends State<login> {
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.8,
+                  height: MediaQuery.of(context).size.height*.8,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -103,7 +109,7 @@ class _loginState extends State<login> {
                     padding: EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        SizedBox(height: 60),
+                        Image.asset('images/Mobile-login-Cristina.jpg',height: 220),
                         Container(
                           padding: EdgeInsets.all(20),
                           decoration: BoxDecoration(
@@ -150,7 +156,7 @@ class _loginState extends State<login> {
                         Container(
                           child: registerButton('สมัครสมาชิก'),
                         ),
-                       // animationDialog_succes(),
+                        // animationDialog_succes(),
                       ],
                     ),
                   ),
@@ -298,7 +304,7 @@ class _loginState extends State<login> {
 
   Widget registerButton(String str) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8.0,0.0,8.0,0.0),
+      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
       child: Container(
         height: 50.0,
         width: MediaQuery.of(context).size.width * 0.58,
@@ -306,13 +312,15 @@ class _loginState extends State<login> {
           color: Colors.white,
           //color: Colors.purple[300],
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            side: BorderSide(color: Colors.blue,width: 1.5)
-          ),
+              borderRadius: BorderRadius.circular(30.0),
+              side: BorderSide(color: Colors.blue, width: 1.5)),
           child: Text(
             str.toUpperCase(),
             style: TextStyle(
-                color: Colors.blue, fontSize: 18, fontWeight: FontWeight.bold,fontFamily: 'kanit'),
+                color: Colors.blue,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'kanit'),
           ),
           onPressed: () {
             Navigator.push(
@@ -347,62 +355,73 @@ class _loginState extends State<login> {
     );
   }
 
+  HexColor hexColor = HexColor('#F4656D');
+
   Widget userTextField(String txtLabel /*, String hintTxt*/) {
-    return Padding(
-      padding: EdgeInsets.all(0),
-      child: TextField(
-        controller: _userController, //ผูก ยูเซอร์
-        keyboardType: TextInputType.name,
-        decoration: InputDecoration(
-            errorText: (_errorUser != '') ? _errorUser : null,
-            prefixIcon: Icon(Icons.person),
-            //hintText: hintTxt,
-            labelText: txtLabel,
-            labelStyle: TextStyle(
-              fontSize: 15,
-            ),
-            border: InputBorder.none
-            /*border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0), //กำหนดให้ textfild โค้ง
-          ),*/
-            ),
-      ),
+    return TextField(
+      controller: _userController, //ผูก ยูเซอร์
+      keyboardType: TextInputType.name,
+      // cursorColor: Colors.pinkAccent,
+      style: TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+          // enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.pink)),
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: hexColor)),
+          errorText: (_errorUser != '') ? _errorUser : null,
+          prefixIcon: Icon(
+            Icons.person,
+            color: hexColor,
+          ),
+          //hintText: hintTxt,
+          labelText: txtLabel,
+          labelStyle: TextStyle(
+            color: hexColor,
+            fontSize: 15,
+          ),
+          border: InputBorder.none
+          /*border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0), //กำหนดให้ textfild โค้ง
+        ),*/
+          ),
     );
   }
 
   Widget passWordTextField(String txtLabel /*, String hintTxt*/) {
-    return Padding(
-      padding: EdgeInsets.all(0),
-      child: TextField(
-        //axLength: 20,
-        controller: _passwordController, //ผูก พาสเวิร์ด
-        obscureText: _secureText, //ซ่อน password
-        keyboardType: TextInputType.visiblePassword,
-        decoration: InputDecoration(
-            errorText: (_errorpPassword != '') ? _errorpPassword : null,
-            suffixIcon: IconButton(
-              icon: Icon(_secureText
+    return TextField(
+      //axLength: 20,
+      controller: _passwordController, //ผูก พาสเวิร์ด
+      obscureText: _secureText, //ซ่อน password
+      keyboardType: TextInputType.visiblePassword,
+      decoration: InputDecoration(
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: hexColor)),
+          errorText: (_errorpPassword != '') ? _errorpPassword : null,
+          suffixIcon: IconButton(
+            icon: Icon(
+              _secureText
                   ? Icons.remove_red_eye_outlined
-                  : Icons.remove_red_eye), //เปลี่ยน icon ซ่อน password
-              onPressed: () {
-                setState(() {
-                  _secureText =
-                      !_secureText; //เปลี่ยนให้เป็นรูปตา แสดง พาสเวิร์ด
-                });
-              },
+                  : Icons.remove_red_eye,
+              color: Colors.blue,
             ),
-            prefixIcon: Icon(
-              Icons.security,
-            ),
-            //hintText: hintTxt,
-            labelText: txtLabel,
-            labelStyle: TextStyle(fontSize: 15),
-            border: InputBorder.none
-            /* border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0), //กำหนดให้ textfild โค้ง
-          ),*/
-            ),
-      ),
+            //เปลี่ยน icon ซ่อน password
+            onPressed: () {
+              setState(() {
+                _secureText = !_secureText; //เปลี่ยนให้เป็นรูปตา แสดง พาสเวิร์ด
+              });
+            },
+          ),
+          prefixIcon: Icon(
+            Icons.security,
+            color: hexColor,
+          ),
+          //hintText: hintTxt,
+          labelText: txtLabel,
+          labelStyle: TextStyle(fontSize: 15, color: hexColor),
+          border: InputBorder.none
+          /* border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0), //กำหนดให้ textfild โค้ง
+        ),*/
+          ),
     );
   }
 
@@ -458,17 +477,17 @@ class _loginState extends State<login> {
     );
   }
 
-   animationDialog_Error() {
-      return  AwesomeDialog(
-            context: context,
-            dialogType: DialogType.ERROR,
-            animType: AnimType.RIGHSLIDE,
-            headerAnimationLoop: true,
-            title: 'เข้าสู่ระบบไม่สำเร็จ',
-            desc:
-                'กรุณาลองลองใหม่อีกครั้ง',
-            btnOkOnPress: () {},
-            btnOkIcon: Icons.cancel,
-            btnOkColor: Colors.red)..show();
+  animationDialog_Error() {
+    return AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        animType: AnimType.RIGHSLIDE,
+        headerAnimationLoop: true,
+        title: 'เข้าสู่ระบบไม่สำเร็จ',
+        desc: 'กรุณาลองลองใหม่อีกครั้ง',
+        btnOkOnPress: () {},
+        btnOkIcon: Icons.cancel,
+        btnOkColor: Colors.red)
+      ..show();
   }
 }

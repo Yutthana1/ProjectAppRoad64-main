@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:approad_project64/MyHomePage.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -379,91 +380,61 @@ class _reportroadState extends State<reportroad> {
         print(response.statusCode);
         print(response.data);
         if (response.statusCode == 200) {
-          myAlert('เพิ่มสำเร็จ', 'ขอบคุณสำหรับการรายงานครับ');
+          animationDialog_succes('เพิ่มรายงานสำเร็จ', 'ขอบคุณสำหรับการรายงาน');
+         // myAlert('เพิ่มสำเร็จ', 'ขอบคุณสำหรับการรายงานครับ');
         } else {
-          myAlert('Error!!! ${response.statusCode.toString()}',
-              'เพิ่มไม่สำเร็จ กรุณาลองใหม่อีกครั้ง\n${response.data}');
+          animationDialog_Error("เพิ่มไม่สำเร็จ","กรุณาลองใหม่อีกครั้ง");
         }
 
         /*var testData = jsonResponse['histogram_counts'].cast<double>();
         var averageGrindSize = jsonResponse['average_particle_size'];*/
       }).catchError((error) {
         print(error);
-      /*  myAlert('Error!!! ',
-            'เพิ่มไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');*/
+        animationDialog_Error("เพิ่มไม่สำเร็จ","กรุณาลองใหม่อีกครั้ง");
+
       });
     }
   }
 
-  void myAlert(String title, String content) {
-    showDialog(
+
+  animationDialog_succes(String title, String desc) {
+    return AwesomeDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('$title'),
-          content: Text('$content'),
-          actions: [
-            FlatButton(
-                onPressed: () {
-                  MaterialPageRoute route = MaterialPageRoute(
-                    builder: (context) => HomePage(),
-                  );
-                  Navigator.pushAndRemoveUntil(
-                      context, route, (route) => false);
-                },
-                child: Text('ตกลง')),
-            FlatButton(
-                onPressed: () {
-                  MaterialPageRoute route = MaterialPageRoute(
-                    builder: (context) => HomePage(),
-                  );
-                  Navigator.pushAndRemoveUntil(
-                      context, route, (route) => false);
-                },
-                child: Text('ยกเลิก'))
-          ],
+      animType: AnimType.LEFTSLIDE,
+      headerAnimationLoop: true,
+      dialogType: DialogType.SUCCES,
+      title: title,
+      desc: desc,
+      btnOkOnPress: () {
+        MaterialPageRoute rout = MaterialPageRoute(
+          builder: (context) => HomePage(),
         );
+        Navigator.pushAndRemoveUntil(context, rout, (route) => false);
       },
-    );
+    )..show();
   }
 
-  void errorAlert(String title, String content) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('$title'),
-          content: Text('$content'),
-          actions: [
-            FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('ตกลง'))
-          ],
-        );
-      },
-    );
+
+  animationDialog_Error(String title, String desc) {
+    return AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        animType: AnimType.RIGHSLIDE,
+        headerAnimationLoop: true,
+        title: title,
+        desc: desc,
+        btnOkOnPress: () {
+          if (title == "รหัสผ่านไม่ตรงกัน") {
+            print(title);
+          } else {
+            print('object $title');
+            Navigator.pop(context);
+          }
+        },
+        btnOkIcon: Icons.cancel,
+        btnOkColor: Colors.red)
+      ..show();
   }
 
-/*_uploadToserver() {
-    if (img != null) {
-      //String b64 = base64Encode(img.readAsBytesSync());
-      //print('b64=$b64');
 
-      /*var data ={};
-      data['datatime']=_dateTimeSelect.toString();
-      data['dropdown'] = _dropdownValue.toString();
-      data['lng']=lng.toString();
-      data['lat']=lat.toString();
-      data['detail'] = _controllerDetails.text;
-      data['img64'] = base64Encode(img.readAsBytesSync()).toString();
-      print(data);
-      var encodeJS = jsonEncode(data);
-      print(encodeJS);*/
-
-      //-----------------------------------------------------------------------------
-
-    }
-  }*/
 }
