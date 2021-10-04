@@ -34,7 +34,7 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
   var lng;
   int _cracktype;
   String _dropdownValue;
-  List _listItem = ['หลุม', 'ซ่อมปะ', 'แตกร้าว'];
+  List _listItem = ['หลุม', 'แตกร้าว'];
   String img;
 
   var uid;
@@ -59,6 +59,12 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
     });
     super.initState();
   }
+  @override
+  void dispose() {
+    _controllerDetails.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +84,7 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
                         child: Text('ไม่พบรูปภาพ!'),
                       ),
                 SizedBox(height: 12.0),
-                (img == null) ? Container() : showLatLngText(),
+                (img == null) ? Container() : Card_Lat_Lng(lat,lng),
                 (img == null) ? Container() : buildDropdownButton(),
                 (img == null) ? Container() : detailsTextField( _controllerDetails.text),
                 (img == null) ? Container() : SaveReport(),
@@ -142,16 +148,7 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
     );
   }
 
-  Widget showLatLngText() {
-    return Column(
-      children: [
-        Text(
-          'ละติจูดที่=$lat, ลองติจูด=$lng',
-          style: TextStyle(fontSize: 18),
-        ),
-      ],
-    );
-  }
+
 
   Widget buildDropdownButton() {
     return Padding(
@@ -192,9 +189,9 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
     if (value == 0) {
       return _dropdownValue = 'หลุม';
     } else if (value == 1) {
-      return _dropdownValue = 'ซ่อมปะ';
-    } else if (value == 2) {
       return _dropdownValue = 'แตกร้าว';
+    } else if (value == 2) {
+      return _dropdownValue = 'ซ่อมปะ';
     }
   }
 
@@ -255,9 +252,9 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
       int _varDropInt;
       if (_dropdownValue == 'หลุม') {
         _varDropInt = 0;
-      } else if (_dropdownValue == 'ซ่อมปะ') {
+      } else if (_dropdownValue == 'แตกร้าว' ) {
         _varDropInt = 1;
-      } else if (_dropdownValue == 'แตกร้าว') {
+      } else if (_dropdownValue == 'ซ่อมปะ') {
         _varDropInt = 2;
       }
       try {
@@ -275,6 +272,68 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
         print(e);
       }
     }
+  }
+
+  Widget Card_Lat_Lng(double lat, double lng){
+    return Card(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)),
+      elevation: 5,
+      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Container(
+          padding:
+          EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+          decoration: BoxDecoration(
+              color: Color(0xff1b232f),
+              borderRadius: BorderRadius.circular(10.0)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    lat.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,),
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                    'ละติจูด',
+                    style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    lng.toString(),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                    'ละจิจูด',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 /*_upload() async {
 

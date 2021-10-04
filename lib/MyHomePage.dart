@@ -147,34 +147,34 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => setting(),
-                    ));
-              },
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'images/Settings-icon.png',
-                      width: 100,
-                    ),
-                    Text(
-                      'ตั้งค่า',
-                      style: TextStyle(fontSize: 15, fontFamily: 'Kanit'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // Card(
+          //   shape:
+          //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          //   child: InkWell(
+          //     onTap: () {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => setting(),
+          //           ));
+          //     },
+          //     child: Center(
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Image.asset(
+          //             'images/Settings-icon.png',
+          //             width: 100,
+          //           ),
+          //           Text(
+          //             'ตั้งค่า',
+          //             style: TextStyle(fontSize: 15, fontFamily: 'Kanit'),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       drawer: showDrawer(),
@@ -253,7 +253,7 @@ class _HomePageState extends State<HomePage> {
 
     if(response.statusCode==200){
       setState(() {
-        var bodyDecode = jsonDecode(response.body);
+        var bodyDecode = jsonDecode(utf8.decode(response.bodyBytes));
         this._name = bodyDecode['name'];
         this._lastname = bodyDecode['lastname'];
         this._phone = bodyDecode['phone'];

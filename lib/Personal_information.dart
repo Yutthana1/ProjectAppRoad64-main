@@ -334,13 +334,13 @@ class _personaluserState extends State<personaluser> {
     var body = json.encode(data);
 
     var response = await http.post(endPoint,
-        headers: {"Content-Type": "application/json"},
-        body: body
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: body,
     );
 
     if(response.statusCode==200){
       setState(() {
-        var bodyDecode = jsonDecode(response.body);
+        var bodyDecode = jsonDecode(utf8.decode(response.bodyBytes));
         this._name = bodyDecode['name'];
         this._lastname = bodyDecode['lastname'];
         this._phone = bodyDecode['phone'];

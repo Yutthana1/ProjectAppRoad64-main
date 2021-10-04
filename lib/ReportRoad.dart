@@ -20,10 +20,10 @@ class reportroad extends StatefulWidget {
 }
 
 class _reportroadState extends State<reportroad> {
-  int _valueInt;
+ // int _valueInt;
   String _dropdownValue;
-  List _listValue = [0, 1, 2];
-  List _listItem = ['หลุม', 'ซ่อมปะ', 'แตกร้าว'];
+ // List _listValue = [0, 1, 2];
+  List _listItem = ['หลุม', 'แตกร้าว'];
 
   DateTime _dateTimeSelect = DateTime.now();
   TextEditingController _controllerDetails =
@@ -41,6 +41,7 @@ class _reportroadState extends State<reportroad> {
 
     findLatLng(); //หาตำแหน่งก่อนค่อย get location
   }
+
 
   //thread ไว้ค้นหาตำแหน่งเวลาเปิดแอฟขึ้นมาอัตโนมัติ
   Future<LocationData> findLocationData() async {
@@ -63,6 +64,12 @@ class _reportroadState extends State<reportroad> {
   }
 
   @override
+  void dispose() {
+    _controllerDetails.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -75,16 +82,16 @@ class _reportroadState extends State<reportroad> {
               children: [
                 (lat == null) ? showProgress() : showMap(),
                 showImageCamera(),
-                (img == null)
-                    ? Text(
-                        '*กรูณาถ่ายภาพ หรือ เลือกรูปภาพ*',
-                        style: TextStyle(fontSize: 16, color: Colors.red),
-                      )
-                    : Container(),
-                showIconImgCameraGallary(),
+                // (img == null)
+                //     ? Text(
+                //         '*กรูณาถ่ายภาพ หรือ เลือกรูปภาพ*',
+                //         style: TextStyle(fontSize: 16, color: Colors.red),
+                //       )
+                //     : Container(),
+                (img != null) ? Container() :button_Camera(),
                 SizedBox(height: 12.0),
                 //(img == null) ? Container() : showDatepicker(context),
-                (img == null) ? Container() : showLatLngText(),
+                (img == null) ? Container() : Card_Lat_Lng(lat.toString(),lng.toString()),
                 (img == null) ? Container() : buildDropdownButton(),
                 (img == null)
                     ? Container()
@@ -163,6 +170,23 @@ class _reportroadState extends State<reportroad> {
           ),
         ),
       ],
+    );
+  }
+  Widget button_Camera(){
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10,),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 10.0,
+          padding:  EdgeInsets.symmetric(vertical: 20,horizontal: 100),
+          shape: StadiumBorder(),
+        ),
+        child: Text('ถ่ายภาพ',style: TextStyle(fontSize: 16,fontFamily: "kanit"),),
+        onPressed: () {
+          chooseImge(ImageSource.camera);
+          print("Take photo");
+        },
+      ),
     );
   }
 
@@ -349,9 +373,9 @@ class _reportroadState extends State<reportroad> {
       int _varDropInt;
       if(_dropdownValue=='หลุม'){
         _varDropInt=0;
-      }else if(_dropdownValue=='ซ่อมปะ'){
-        _varDropInt=1;
       }else if(_dropdownValue=='แตกร้าว'){
+        _varDropInt=1;
+      }else if(_dropdownValue=='ซ่อมปะ'){
         _varDropInt=2;
       }
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -434,6 +458,68 @@ class _reportroadState extends State<reportroad> {
         btnOkIcon: Icons.cancel,
         btnOkColor: Colors.red)
       ..show();
+  }
+
+  Widget Card_Lat_Lng(String lat, String lng){
+    return Card(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)),
+      elevation: 5,
+      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Container(
+          padding:
+          EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+          decoration: BoxDecoration(
+              color: Color(0xff1b232f),
+              borderRadius: BorderRadius.circular(10.0)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  Text(
+                   lat,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,),
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                    'ละติจูด',
+                    style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    lng,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                    'ละจิจูด',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
 

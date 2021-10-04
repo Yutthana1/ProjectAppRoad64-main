@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:approad_project64/MyHomePage.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 //import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,12 +26,18 @@ class _loginState extends State<login> {
   TextEditingController _userController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   String userId;
+  final RoundedLoadingButtonController _btnController = RoundedLoadingButtonController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    //this._btnController.start();
     autoLogIn();
+
+    _btnController.stateStream.listen((value) {
+      print(value);
+    });
   }
 
   Future<Null> autoLogIn() async {
@@ -150,13 +158,14 @@ class _loginState extends State<login> {
                           /*decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
                               color: Colors.blue[400]),*/
-                          child: loginButton(),
+                          // child: loginButton(),
+                          child: _doLoginButton(),
                         ),
                         SizedBox(height: 20),
                         Container(
                           child: registerButton('สมัครสมาชิก'),
                         ),
-                        // animationDialog_succes(),
+
                       ],
                     ),
                   ),
@@ -184,6 +193,58 @@ class _loginState extends State<login> {
           color: Colors.white,
         ),
       ),*/
+    );
+  }
+  Future<void> _doLogin() async {
+
+      if (_userController.text != '' &&
+          _passwordController.text != '') {
+        _errorUser = null;
+        _errorpPassword = null;
+        //print('_userController=' + _userController.text);
+        //print('_passwordController=' + _passwordController.text);
+        checkAuthen(); // เมทอด เช็คล็อกอิน
+
+      } else if (_userController.text == '' &&
+          _passwordController.text != '') {
+        this._btnController.reset();
+        _errorUser = 'โปรดใส่ข้อมูลUser';
+        _errorpPassword = null;
+        print('โปรดใส่ข้อมูลUser');
+      } else if (_userController.text != '' &&
+          _passwordController.text == '') {
+        this._btnController.reset();
+        _errorpPassword = 'โปรดใส่Password';
+        _errorUser = null;
+        print('โปรดใส่Password');
+      } else {
+        this._btnController.reset();
+        _errorUser = _errorpPassword = 'โปรดใส่ข้อมูล';
+        print('โปรดใส่ข้อมูล');
+      }
+      setState(() {});
+
+  }
+
+  Widget _doLoginButton(){
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          RoundedLoadingButton(
+
+            color: HexColor("#FF9292"),
+            resetDuration: Duration(seconds: 4),
+            elevation: 5,
+            successColor: Colors.green,
+           successIcon: Icons.done,
+            failedIcon: Icons.cancel,
+            child: Text('Login', style: TextStyle(fontSize: 18, color: Colors.white, fontFamily: 'kanit')),
+            controller: _btnController,
+            onPressed: ()=>_doLogin(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -219,13 +280,16 @@ class _loginState extends State<login> {
                     _passwordController.text != '') {
                   _errorUser = 'โปรดใส่ข้อมูลUser';
                   _errorpPassword = null;
+
                   print('โปรดใส่ข้อมูลUser');
                 } else if (_userController.text != '' &&
                     _passwordController.text == '') {
                   _errorpPassword = 'โปรดใส่Password';
                   _errorUser = null;
+
                   print('โปรดใส่Password');
                 } else {
+
                   _errorUser = _errorpPassword = 'โปรดใส่ข้อมูล';
                   print('โปรดใส่ข้อมูล');
                 }
@@ -264,7 +328,15 @@ class _loginState extends State<login> {
             String token = resJsDe[0]['token'];
 
             //if (type =='user'){
-            routeToService(HomePage(), token, id);
+            Timer(Duration(milliseconds: 110 ), (){
+              this._btnController.success();
+            });
+
+            Timer(Duration(milliseconds: 800), () {
+              routeToService(HomePage(), token, id);
+              this._btnController.reset();
+            });
+
             // }else if(type =='admin'){ }
 
           } else {
@@ -280,7 +352,12 @@ class _loginState extends State<login> {
         errorAlert('Error!!!', 'ไม่พบข้อมูล user!!');
       }
     } catch (e) {
-      animationDialog_Error();
+      Timer(Duration(seconds: 1), () {
+        this._btnController.reset();
+        animationDialog_Error();
+      });
+
+
       //errorAlert('Error!!!', 'ไม่สามารถเข้าสู่ระบบได้ กรูณาลองใหม่อีกครั้ง');
       print('Error !! $e');
     }
@@ -307,7 +384,7 @@ class _loginState extends State<login> {
       padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
       child: Container(
         height: 50.0,
-        width: MediaQuery.of(context).size.width * 0.58,
+        width: MediaQuery.of(context).size.width * 0.645,
         child: RaisedButton(
           color: Colors.white,
           //color: Colors.purple[300],

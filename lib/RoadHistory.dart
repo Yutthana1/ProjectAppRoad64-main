@@ -20,8 +20,13 @@ class _roadhistoryState extends State<roadhistory> {
   FRefreshController controller1;
 
   List<reportRecordModel> reportRecordList = [];
+@override
+  void dispose() {
+  controller1.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
 
-  //List<RoadhistoryModel> RoadHistoryList=[];
   @override
   void initState() {
     // TODO: implement initState
@@ -105,15 +110,21 @@ class _roadhistoryState extends State<roadhistory> {
             itemCount: reportRecordList.length,
             itemBuilder: (context, index) {
               return Card(
+                color:(reportRecordList[index].predict == 1)? Colors.grey.shade400:Colors.white ,
                 elevation: 5,
                 //margin: EdgeInsets.all(5.0),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 1),
                   child: ListTile(
                     leading: Container(
                         width: MediaQuery.of(context).size.width * 0.25,
-                        child: Image.network(
-                            'http://20.198.233.53:1230/photo/${reportRecordList[index].userIdFk}/${reportRecordList[index].photo}')),
+                        child: Stack(
+                          children: [
+                            Image.network(
+                                'http://20.198.233.53:1230/photo/${reportRecordList[index].userIdFk}/${reportRecordList[index].photo}'),
+                            (reportRecordList[index].predict == 1) ? Container(margin: EdgeInsets.symmetric(horizontal: 2,vertical: 2),color: Color(0xff1b232f),child: Text("Predict",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green,fontSize: 10.0),)) : Container(margin: EdgeInsets.symmetric(horizontal: 2,vertical: 2),color: Color(0xff1b232f),child: Text('N\'t Predict',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.red,fontSize: 10.0),)),
+                          ],
+                        )),
                     title: Text(
                       '${indexType(reportRecordList[index].crackType)}',
                       style: TextStyle(fontSize: 20),
@@ -175,9 +186,9 @@ class _roadhistoryState extends State<roadhistory> {
     if (type == 0) {
       return 'หลุม';
     } else if (type == 1) {
-      return 'ซ่อมปะ';
-    } else if (type == 2) {
       return 'แตกร้าว';
+    } else if (type == 2) {
+      return 'ซ่อมปะ';
     } else if (type == 3) {
       return 'ไม่ทราบ!';
     }
@@ -281,4 +292,6 @@ class _roadhistoryState extends State<roadhistory> {
         btnOkIcon: Icons.check_circle,
         )..show();
   }
+
+
 }
