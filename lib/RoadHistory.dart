@@ -5,9 +5,11 @@ import 'package:approad_project64/EditRoad.dart';
 import 'package:approad_project64/models/ReportRecordModel.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:frefresh/frefresh.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,9 +22,10 @@ class _roadhistoryState extends State<roadhistory> {
   FRefreshController controller1;
 
   List<reportRecordModel> reportRecordList = [];
-@override
+
+  @override
   void dispose() {
-  controller1.dispose();
+    controller1.dispose();
     // TODO: implement dispose
     super.dispose();
   }
@@ -109,72 +112,80 @@ class _roadhistoryState extends State<roadhistory> {
             shrinkWrap: true,
             itemCount: reportRecordList.length,
             itemBuilder: (context, index) {
-              return Card(
-                color:(reportRecordList[index].predict == 1)? Colors.grey.shade400:Colors.white ,
-                elevation: 5,
-                //margin: EdgeInsets.all(5.0),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 1),
-                  child: ListTile(
-                    leading: Container(
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        child: Stack(
-                          children: [
-                            Image.network(
-                                'http://20.198.233.53:1230/photo/${reportRecordList[index].userIdFk}/${reportRecordList[index].photo}'),
-                            (reportRecordList[index].predict == 1) ? Container(margin: EdgeInsets.symmetric(horizontal: 2,vertical: 2),color: Color(0xff1b232f),child: Text("Predict",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green,fontSize: 10.0),)) : Container(margin: EdgeInsets.symmetric(horizontal: 2,vertical: 2),color: Color(0xff1b232f),child: Text('N\'t Predict',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.red,fontSize: 10.0),)),
-                          ],
-                        )),
-                    title: Text(
-                      '${indexType(reportRecordList[index].crackType)}',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    trailing: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.start,
-                      children: [
-                        (reportRecordList[index].predict == 0)
-                            ? IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      new MaterialPageRoute(
-                                        builder: (context) =>
-                                            new EditRoadHistory(
-                                                reportRecordList, index),
-                                      )).then((value) {
-                                    setState(() {
-                                      loadRoadhistory();
-                                    });
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.edit,
-                                  color: Colors.green,
-                                ),
-                              )
-                            : Container(
-                                height: 1.0,
-                                width: 1.0,
-                              ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {});
-                            animationDialog_delete(index);
-                            //deleteDialog('ลบข้อมูล', 'ยืนยันการลบ', index);
-                          },
-                          icon: Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                    subtitle: Text(
-                        '${reportRecordList[index].detail}\n${reportRecordList[index].date.substring(5, 25)}'),
-                    isThreeLine: true,
-                  ),
-                ),
-              );
+              // return Card(
+              //   color:(reportRecordList[index].predict == 1)? Colors.grey.shade400:Colors.white ,
+              //   elevation: 5,
+              //   //margin: EdgeInsets.all(5.0),
+              //   child: Padding(
+              //     padding: EdgeInsets.symmetric(horizontal: 0, vertical: 1),
+              //     child: ListTile(
+              //       leading: Container(
+              //           width: MediaQuery.of(context).size.width * 0.25,
+              //           child: Stack(
+              //             children: [
+              //               Image.network(
+              //                   'http://20.198.233.53:1230/photo/${reportRecordList[index].userIdFk}/${reportRecordList[index].photo}'),
+              //               (reportRecordList[index].predict == 1) ? Container(margin: EdgeInsets.symmetric(horizontal: 2,vertical: 2),color: Color(0xff1b232f),child: Text("Predict",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green,fontSize: 10.0),)) : Container(margin: EdgeInsets.symmetric(horizontal: 2,vertical: 2),color: Color(0xff1b232f),child: Text('N\'t Predict',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.red,fontSize: 10.0),)),
+              //             ],
+              //           )),
+              //       title: Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Text(
+              //             '${indexType(reportRecordList[index].crackType)}',
+              //             style: TextStyle(fontSize: 20),
+              //           ),
+              //          // respone_officer(),
+              //         ],
+              //
+              //       ),
+              //       trailing: Wrap(
+              //         crossAxisAlignment: WrapCrossAlignment.start,
+              //         children: [
+              //           (reportRecordList[index].predict == 0)
+              //               ? IconButton(
+              //                   onPressed: () {
+              //                     Navigator.push(
+              //                         context,
+              //                         new MaterialPageRoute(
+              //                           builder: (context) =>
+              //                               new EditRoadHistory(
+              //                                   reportRecordList, index),
+              //                         )).then((value) {
+              //                       setState(() {
+              //                         loadRoadhistory();
+              //                       });
+              //                     });
+              //                   },
+              //                   icon: Icon(
+              //                     Icons.edit,
+              //                     color: Colors.green,
+              //                   ),
+              //                 )
+              //               : Container(
+              //                   height: 1.0,
+              //                   width: 1.0,
+              //                 ),
+              //           IconButton(
+              //             onPressed: () {
+              //               setState(() {});
+              //               animationDialog_delete(index);
+              //               //deleteDialog('ลบข้อมูล', 'ยืนยันการลบ', index);
+              //             },
+              //             icon: Icon(
+              //               Icons.delete,
+              //               color: Colors.red,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //       subtitle: Text(
+              //           '${reportRecordList[index].detail}\n${reportRecordList[index].date.substring(5, 25)}'),
+              //       isThreeLine: true,
+              //     ),
+              //   ),
+              // );
+              return _content(index);
             },
           ),
         ),
@@ -242,56 +253,285 @@ class _roadhistoryState extends State<roadhistory> {
         }).then((value) => loadRoadhistory());*/
 
     var dio = Dio();
-    var res = await dio
-        .post(path, data: jsonEncode({'road_id': road_id, 'id_user': userId}));
+    var res = await dio.post(path,
+        data: jsonEncode({'road_id': road_id, 'id_user': userId}));
     if (res.statusCode == 200) {
-       animationDialog_succes();
-        /*loadRoadhistory();
+      animationDialog_succes();
+      /*loadRoadhistory();
         print(jsonDecoDE);*/
 
     }
   }
 
-   animationDialog_succes() {
-     return AwesomeDialog(
-            context: context,
-            animType: AnimType.SCALE,
-            headerAnimationLoop: false,
-            dialogType: DialogType.SUCCES,
-            title: 'ลบข้อมูลสำเร็จ',
-            btnOkOnPress: () {
-              controller1.refresh(duration: Duration(milliseconds: 2000));
-              debugPrint('OnClcik');
-            },
-            btnOkIcon: Icons.check_circle,
-            )..show();
+  animationDialog_succes() {
+    return AwesomeDialog(
+      context: context,
+      animType: AnimType.SCALE,
+      headerAnimationLoop: false,
+      dialogType: DialogType.SUCCES,
+      title: 'ลบข้อมูลสำเร็จ',
+      btnOkOnPress: () {
+        controller1.refresh(duration: Duration(milliseconds: 2000));
+        debugPrint('OnClcik');
+      },
+      btnOkIcon: Icons.check_circle,
+    )..show();
   }
+
   animationDialog_delete(int index) {
     return AwesomeDialog(
-        context: context,
-        animType: AnimType.LEFTSLIDE,
-        headerAnimationLoop: false,
-        dialogType: DialogType.QUESTION,
-        showCloseIcon: true,
-        title: 'ลบข้อมูล',
-        desc:
-        'ยืนยันการลบข้อมูล',
-        btnOkOnPress: () {
-          print(reportRecordList[index].roadId);
-          print(reportRecordList[index].userIdFk);
-          int idRoad = reportRecordList[index].roadId;
-          DeleteReportByID(idRoad);
-          //Navigator.pop(context);
-          //debugPrint('OnClcik');
-        },
-        btnOkText: "ยืนยัน",
-        btnCancelOnPress: () {
-          debugPrint('cancleClcik');
-        },
-       btnCancelText: "ยกเลิก",
-        btnOkIcon: Icons.check_circle,
-        )..show();
+      context: context,
+      animType: AnimType.LEFTSLIDE,
+      headerAnimationLoop: false,
+      dialogType: DialogType.QUESTION,
+      showCloseIcon: true,
+      title: 'ลบข้อมูล',
+      desc: 'ยืนยันการลบข้อมูล',
+      btnOkOnPress: () {
+        print(reportRecordList[index].roadId);
+        print(reportRecordList[index].userIdFk);
+        int idRoad = reportRecordList[index].roadId;
+        DeleteReportByID(idRoad);
+        //Navigator.pop(context);
+        //debugPrint('OnClcik');
+      },
+      btnOkText: "ยืนยัน",
+      btnCancelOnPress: () {
+        debugPrint('cancleClcik');
+      },
+      btnCancelText: "ยกเลิก",
+      btnOkIcon: Icons.check_circle,
+    )..show();
   }
 
+  Widget respone_officer() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        children: [
+          Container(
+            width: 15,
+            height: 15,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30), color: Colors.red),
+          ),
+          Text("ยังไม่ซ่อม"),
+        ],
+      ),
+    );
+  }
 
+  Widget _content(int indexs) {
+    HexColor _colorHead = HexColor("#f9d8a6");
+    double sizeContainer = 120;
+    String src =
+        'http://20.198.233.53:1230/photo/${reportRecordList[indexs].userIdFk}/${reportRecordList[indexs].photo}';
+    return Card(
+      elevation: 4,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+              flex: 2,
+              child: Container(
+                height: sizeContainer,
+                child: Stack(
+                  children: [
+                    Image.network(
+                      src,
+                      height: sizeContainer,
+                      fit: BoxFit.cover,
+                    ),
+                    (reportRecordList[indexs].predict == 1)
+                        ? Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 2, vertical: 2),
+                            color: Color(0xff1b232f),
+                            child: Text(
+                              "Predict",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                  fontSize: 10.0),
+                            ))
+                        : Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 2, vertical: 2),
+                            color: Color(0xff1b232f),
+                            child: Text(
+                              'N\'t Predict',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                  fontSize: 10.0),
+                            )),
+                  ],
+                ),
+                decoration: BoxDecoration(color: Colors.white),
+              )),
+          Expanded(
+            flex: 3,
+            child: Container(
+              height: sizeContainer,
+              padding: EdgeInsets.symmetric(vertical: 1, horizontal: 6),
+              child: ListView(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${indexType(reportRecordList[indexs].crackType)}",
+                        style: TextStyle(
+                            color: Colors.orange,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                     // rowfixed("ยังไม่ซ่อม",Icons.circle_notifications,Colors.red),
+                      rowfixed("ซ่อมแล้ว",Icons.check_circle_rounded,Colors.green),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "ตำแหน่ง:",
+                        style: TextStyle(
+                            color: _colorHead, fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "\t\t\tละติจูด:\t${reportRecordList[indexs].gpsLatitude} \n\t\t\tลองจิจูด:\t${reportRecordList[indexs].gpsLongitude}",
+                        style: TextStyle(
+                            color: HexColor("#bbffff"),
+                            fontWeight: FontWeight.w400),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 4,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "วันที่แจ้ง:",
+                        style: TextStyle(
+                            color: _colorHead, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "\t\t\t${reportRecordList[indexs].date.substring(5, 25)}",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "รายละเอียดเพิ่มเติม:",
+                        style: TextStyle(
+                            color: _colorHead, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        child: Text(
+                          "\t\t\t${reportRecordList[indexs].detail}",
+                         // overflow: TextOverflow.ellipsis,
+                          //maxLines: 1,
+                          //softWrap: false,
+
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              //Color(0xff1b232f),
+              decoration: BoxDecoration(color: HexColor("#252B31")),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              height: sizeContainer,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  (reportRecordList[indexs].predict == 0)
+                      ? IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                  builder: (context) => new EditRoadHistory(
+                                      reportRecordList, indexs),
+                                )).then((value) {
+                              setState(() {
+                                loadRoadhistory();
+                              });
+                            });
+                          },
+                          icon: Icon(
+                            Icons.edit,
+                            color: Colors.green,
+                          ),
+                        )
+                      : Container(
+                          height: 1.0,
+                          width: 1.0,
+                        ),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {});
+                      animationDialog_delete(indexs);
+                      //deleteDialog('ลบข้อมูล', 'ยืนยันการลบ', index);
+                    },
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              decoration: BoxDecoration(color: HexColor("#eeeeee")),
+            ),
+          ),
+          // const Icon(
+          //   Icons.more_vert,
+          //   size: 16.0,
+          // ),
+        ],
+      ),
+    );
+  }
+
+  Row rowfixed(String texts, IconData icons , Color colors) {
+    return Row(
+      children: [
+        Text(
+          texts,
+          style: TextStyle(color: colors, fontWeight: FontWeight.w400),
+        ),
+        Icon(
+          icons,
+          color: colors,
+        ),
+      ],
+    );
+  }
 }
