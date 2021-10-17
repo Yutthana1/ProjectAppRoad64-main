@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:approad_project64/RoadHistory.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -335,54 +333,5 @@ class _EditRoadHistoryState extends State<EditRoadHistory> {
       ),
     );
   }
-/*_upload() async {
 
-    if (img != null) {
-      int _varDropInt;
-      if (_dropdownValue == 'หลุม') {
-        _varDropInt = 0;
-      } else if (_dropdownValue == 'ซ่อมปะ') {
-        _varDropInt = 1;
-      } else if (_dropdownValue == 'แตกร้าว') {
-        _varDropInt = 2;
-      }
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      String userId = preferences.getString('userId');
-
-      String fileName = file.path.split('/').last;
-      FormData data = FormData.fromMap({
-        "file": await MultipartFile.fromFile(
-          file.path,
-          filename: fileName,
-        ),
-        "userid": userId,
-        //'dateTime':_dateTimeSelect,
-        'gps_latitude': lat,
-        'gps_longitude': lng,
-        'crack_type': _varDropInt,
-        'detail': _controllerDetails.text
-      });
-      //print(fileName);
-      // print(_varDropInt);
-      print(data.files);
-      Dio dio = new Dio();
-      dio.post(endPoint, data: data).then((response) {
-        var jsonResponse = jsonDecode(response.data);
-        print('jsonResponse= $jsonResponse');
-        print(response.statusCode);
-        print(response.data);
-        if (response.statusCode == 200) {
-          //myAlert('เพิ่มสำเร็จ', 'ขอบคุณสำหรับการรายงานครับ');
-        } else {
-          //myAlert('Error!!! ${response.statusCode.toString()}','เพิ่มไม่สำเร็จ กรุณาลองใหม่อีกครั้ง\n${response.data}');
-        }
-
-        /*var testData = jsonResponse['histogram_counts'].cast<double>();
-        var averageGrindSize = jsonResponse['average_particle_size'];*/
-      }).catchError((error) {
-        print(error);
-      });
-    }
-  }
-*/
 }

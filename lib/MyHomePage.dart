@@ -147,34 +147,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          // Card(
-          //   shape:
-          //       RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          //   child: InkWell(
-          //     onTap: () {
-          //       Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //             builder: (context) => setting(),
-          //           ));
-          //     },
-          //     child: Center(
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           Image.asset(
-          //             'images/Settings-icon.png',
-          //             width: 100,
-          //           ),
-          //           Text(
-          //             'ตั้งค่า',
-          //             style: TextStyle(fontSize: 15, fontFamily: 'Kanit'),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
       drawer: showDrawer(),

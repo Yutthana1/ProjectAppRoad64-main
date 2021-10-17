@@ -6,13 +6,15 @@ class RoadhistoryModel {
   int uId;
   String username;
 
+
   RoadhistoryModel(
       {this.imgProfileBase64Temp,
         this.name,
         this.nameId,
         this.password,
         this.uId,
-        this.username});
+        this.username,
+      });
 
   RoadhistoryModel.fromJson(Map<String, dynamic> json) {
     imgProfileBase64Temp = json['img_profile_base64_temp'];

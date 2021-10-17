@@ -82,12 +82,6 @@ class _reportroadState extends State<reportroad> {
               children: [
                 (lat == null) ? showProgress() : showMap(),
                 showImageCamera(),
-                // (img == null)
-                //     ? Text(
-                //         '*กรูณาถ่ายภาพ หรือ เลือกรูปภาพ*',
-                //         style: TextStyle(fontSize: 16, color: Colors.red),
-                //       )
-                //     : Container(),
                 (img != null) ? Container() :button_Camera(),
                 SizedBox(height: 12.0),
                 //(img == null) ? Container() : showDatepicker(context),
@@ -240,14 +234,7 @@ class _reportroadState extends State<reportroad> {
           color: HexColor('#3b38ea'),
           onPressed: () {
             _upload(img);
-            /*MaterialPageRoute route = MaterialPageRoute(
-              builder: (context) => HomePage(),
-            );
-            Navigator.pushAndRemoveUntil(context, route, (route) => false);*/
-            //print('valuint=$_valueInt');
-            //print(' date time now : ${_dateTimeSelect}');
-            //print('Drop down vlue =$_dropdownValue');
-            // _uploadToserver();
+
           },
           icon: Icon(
             Icons.save,

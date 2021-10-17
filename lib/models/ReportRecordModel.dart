@@ -9,6 +9,7 @@ class reportRecordModel {
   int roadId;
   int state;
   int userIdFk;
+  int repaired;
 
   reportRecordModel(
       {this.crackType,
@@ -20,7 +21,8 @@ class reportRecordModel {
         this.predict,
         this.roadId,
         this.state,
-        this.userIdFk});
+        this.userIdFk,
+      this.repaired});
 
   reportRecordModel.fromJson(Map<String, dynamic> json) {
     crackType = json['crack_type'];
@@ -33,6 +35,7 @@ class reportRecordModel {
     roadId = json['road_id'];
     state = json['state'];
     userIdFk = json['user_id_fk'];
+    repaired = json['repaired'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +50,7 @@ class reportRecordModel {
     data['road_id'] = this.roadId;
     data['state'] = this.state;
     data['user_id_fk'] = this.userIdFk;
+    data['repaired'] = this.repaired;
     return data;
   }
 }

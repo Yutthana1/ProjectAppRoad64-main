@@ -11,7 +11,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-//import 'package:localstorage/localstorage.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class login extends StatefulWidget {
@@ -32,7 +32,7 @@ class _loginState extends State<login> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    //this._btnController.start();
+
     autoLogIn();
 
     _btnController.stateStream.listen((value) {
@@ -175,24 +175,7 @@ class _loginState extends State<login> {
           ],
         ),
       ),
-      /*body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 16),
-              userTextField('Username', 'ชื่อผู้ใช้งาน'),
-              SizedBox(height: 16),
-              passWordTextField('Password', 'รหัสผ่าน'),
-              SizedBox(height: 25),
-              loginButton(), //ปุ่ม login
-              SizedBox(height: 20),
-              registerTextField('สมัครสมาชิก'),
-            ],
-          ),
-          color: Colors.white,
-        ),
-      ),*/
+
     );
   }
   Future<void> _doLogin() async {
@@ -441,7 +424,7 @@ class _loginState extends State<login> {
       // cursorColor: Colors.pinkAccent,
       style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
-          // enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.pink)),
+
           focusedBorder:
               UnderlineInputBorder(borderSide: BorderSide(color: hexColor)),
           errorText: (_errorUser != '') ? _errorUser : null,
@@ -456,16 +439,14 @@ class _loginState extends State<login> {
             fontSize: 15,
           ),
           border: InputBorder.none
-          /*border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30.0), //กำหนดให้ textfild โค้ง
-        ),*/
+
           ),
     );
   }
 
   Widget passWordTextField(String txtLabel /*, String hintTxt*/) {
     return TextField(
-      //axLength: 20,
+
       controller: _passwordController, //ผูก พาสเวิร์ด
       obscureText: _secureText, //ซ่อน password
       keyboardType: TextInputType.visiblePassword,

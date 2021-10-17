@@ -58,7 +58,7 @@ class _roadhistoryState extends State<roadhistory> {
       if (response.statusCode == 200) {
         //print(response.body);
         final jsonDecoDE = jsonDecode(response.body);
-        //print(jsonDecoDE);
+        print(jsonDecoDE);
         reportRecordList.clear();
         jsonDecoDE.forEach((data) {
           final dataOBJ = reportRecordModel.fromJson(data);
@@ -112,79 +112,6 @@ class _roadhistoryState extends State<roadhistory> {
             shrinkWrap: true,
             itemCount: reportRecordList.length,
             itemBuilder: (context, index) {
-              // return Card(
-              //   color:(reportRecordList[index].predict == 1)? Colors.grey.shade400:Colors.white ,
-              //   elevation: 5,
-              //   //margin: EdgeInsets.all(5.0),
-              //   child: Padding(
-              //     padding: EdgeInsets.symmetric(horizontal: 0, vertical: 1),
-              //     child: ListTile(
-              //       leading: Container(
-              //           width: MediaQuery.of(context).size.width * 0.25,
-              //           child: Stack(
-              //             children: [
-              //               Image.network(
-              //                   'http://20.198.233.53:1230/photo/${reportRecordList[index].userIdFk}/${reportRecordList[index].photo}'),
-              //               (reportRecordList[index].predict == 1) ? Container(margin: EdgeInsets.symmetric(horizontal: 2,vertical: 2),color: Color(0xff1b232f),child: Text("Predict",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.green,fontSize: 10.0),)) : Container(margin: EdgeInsets.symmetric(horizontal: 2,vertical: 2),color: Color(0xff1b232f),child: Text('N\'t Predict',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.red,fontSize: 10.0),)),
-              //             ],
-              //           )),
-              //       title: Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           Text(
-              //             '${indexType(reportRecordList[index].crackType)}',
-              //             style: TextStyle(fontSize: 20),
-              //           ),
-              //          // respone_officer(),
-              //         ],
-              //
-              //       ),
-              //       trailing: Wrap(
-              //         crossAxisAlignment: WrapCrossAlignment.start,
-              //         children: [
-              //           (reportRecordList[index].predict == 0)
-              //               ? IconButton(
-              //                   onPressed: () {
-              //                     Navigator.push(
-              //                         context,
-              //                         new MaterialPageRoute(
-              //                           builder: (context) =>
-              //                               new EditRoadHistory(
-              //                                   reportRecordList, index),
-              //                         )).then((value) {
-              //                       setState(() {
-              //                         loadRoadhistory();
-              //                       });
-              //                     });
-              //                   },
-              //                   icon: Icon(
-              //                     Icons.edit,
-              //                     color: Colors.green,
-              //                   ),
-              //                 )
-              //               : Container(
-              //                   height: 1.0,
-              //                   width: 1.0,
-              //                 ),
-              //           IconButton(
-              //             onPressed: () {
-              //               setState(() {});
-              //               animationDialog_delete(index);
-              //               //deleteDialog('ลบข้อมูล', 'ยืนยันการลบ', index);
-              //             },
-              //             icon: Icon(
-              //               Icons.delete,
-              //               color: Colors.red,
-              //             ),
-              //           ),
-              //         ],
-              //       ),
-              //       subtitle: Text(
-              //           '${reportRecordList[index].detail}\n${reportRecordList[index].date.substring(5, 25)}'),
-              //       isThreeLine: true,
-              //     ),
-              //   ),
-              // );
               return _content(index);
             },
           ),
@@ -246,19 +173,12 @@ class _roadhistoryState extends State<roadhistory> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('userId');
-    /* var response = await http.post(path,
-        body: jsonEncode({'road_id': road_id, 'id_user': userId}),
-        headers: {
-          'Content-Type': 'application/json'
-        }).then((value) => loadRoadhistory());*/
 
     var dio = Dio();
     var res = await dio.post(path,
         data: jsonEncode({'road_id': road_id, 'id_user': userId}));
     if (res.statusCode == 200) {
       animationDialog_succes();
-      /*loadRoadhistory();
-        print(jsonDecoDE);*/
 
     }
   }
@@ -292,8 +212,6 @@ class _roadhistoryState extends State<roadhistory> {
         print(reportRecordList[index].userIdFk);
         int idRoad = reportRecordList[index].roadId;
         DeleteReportByID(idRoad);
-        //Navigator.pop(context);
-        //debugPrint('OnClcik');
       },
       btnOkText: "ยืนยัน",
       btnCancelOnPress: () {
@@ -327,7 +245,7 @@ class _roadhistoryState extends State<roadhistory> {
     String src =
         'http://20.198.233.53:1230/photo/${reportRecordList[indexs].userIdFk}/${reportRecordList[indexs].photo}';
     return Card(
-      elevation: 4,
+      elevation: 5,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -386,83 +304,48 @@ class _roadhistoryState extends State<roadhistory> {
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
                       ),
-                     // rowfixed("ยังไม่ซ่อม",Icons.circle_notifications,Colors.red),
-                      rowfixed("ซ่อมแล้ว",Icons.check_circle_rounded,Colors.green),
+                      //Icons.circle_notifications
+                      (reportRecordList[indexs].repaired == 0)
+                          ? rowfixed("ยังไม่ซ่อม", Icons.build_circle_rounded,
+                              Colors.red)
+                          : rowfixed("ซ่อมแล้ว", Icons.check_circle_rounded,
+                              Colors.green),
                     ],
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "ตำแหน่ง:",
-                        style: TextStyle(
-                            color: _colorHead, fontWeight: FontWeight.w600),
-                      )
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "\t\t\tละติจูด:\t${reportRecordList[indexs].gpsLatitude} \n\t\t\tลองจิจูด:\t${reportRecordList[indexs].gpsLongitude}",
-                        style: TextStyle(
-                            color: HexColor("#bbffff"),
-                            fontWeight: FontWeight.w400),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 4,),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "วันที่แจ้ง:",
-                        style: TextStyle(
-                            color: _colorHead, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "\t\t\t${reportRecordList[indexs].date.substring(5, 25)}",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 4,),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "รายละเอียดเพิ่มเติม:",
-                        style: TextStyle(
-                            color: _colorHead, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         child: Text(
-                          "\t\t\t${reportRecordList[indexs].detail}",
-                         // overflow: TextOverflow.ellipsis,
+                          "${reportRecordList[indexs].detail}",
+                          // overflow: TextOverflow.ellipsis,
                           //maxLines: 1,
                           //softWrap: false,
 
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w400),
+                              color: Colors.black, fontWeight: FontWeight.w400),
                         ),
                       ),
                     ],
                   ),
+                  SizedBox(height: 4,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${reportRecordList[indexs].date.substring(5, 25)}",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
+
+
                 ],
               ),
               //Color(0xff1b232f),
-              decoration: BoxDecoration(color: HexColor("#252B31")),
+              decoration: BoxDecoration(color: HexColor("#eeeeee")),
             ),
           ),
           Expanded(
@@ -511,16 +394,13 @@ class _roadhistoryState extends State<roadhistory> {
               decoration: BoxDecoration(color: HexColor("#eeeeee")),
             ),
           ),
-          // const Icon(
-          //   Icons.more_vert,
-          //   size: 16.0,
-          // ),
+
         ],
       ),
     );
   }
 
-  Row rowfixed(String texts, IconData icons , Color colors) {
+  Row rowfixed(String texts, IconData icons, Color colors) {
     return Row(
       children: [
         Text(
